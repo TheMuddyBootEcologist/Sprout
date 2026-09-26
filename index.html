@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flora Trainer</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#2e7d32">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="apple-mobile-web-app-title" content="Flora Trainer">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+
+/* =====================================================
+GENERAL PAGE
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background-color: #f2f2f2;
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
+}
+
+
+/* =====================================================
+PROGRESS
+===================================================== */
+
+#score {
+
+    position: fixed;
+
+    left: 30px;
+
+    top: 30px;
+
+    width: 150px;
+
+    background-color: white;
+
+    padding: 20px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+    text-align: center;
+
+    font-size: 18px;
+
+    z-index: 100;
+
+}
+
+#score-number {
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    color: #2e7d32;
+
+    margin-bottom: 5px;
+
+}
+
+
+/* =====================================================
+MAIN TRAINER
+===================================================== */
+
+.trainer {
+
+    width: calc(100% - 230px);
+
+    max-width: 1750px;
+
+    margin-left: 200px;
+
+    margin-right: 30px;
+
+    text-align: center;
+
+    padding: 30px 0;
+
+}
+
+
+/* =====================================================
+MAIN CONTENT
+===================================================== */
+
+.main-content {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(500px, 800px)
+        minmax(300px, 450px)
+        minmax(300px, 450px);
+
+    gap: 30px;
+
+    align-items: start;
+
+    width: 100%;
+
+}
+
+
+/* =====================================================
+PHOTO SECTION
+===================================================== */
+
+.photo-section {
+
+    width: 100%;
+
+}
+
+
+/* =====================================================
+PLANT IMAGE
+===================================================== */
+
+#plant-image {
+
+    width: 100%;
+
+    height: 900px;
+
+    object-fit: cover;
+
+    background-color: white;
+
+    border-radius: 10px;
+
+    display: block;
+
+}
+
+
+/* =====================================================
+PHOTO NAVIGATION
+
+The controls use the full width of the photo section.
+This guarantees that the entire navigation group is
+centred directly underneath the image box.
+===================================================== */
+
+.photo-controls {
+
+    width: 100%;
+
+    margin-top: 15px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 20px;
+
+    height: 50px;
+
+}
+
+
+/* =====================================================
+PHOTO ARROWS
+===================================================== */
+
+.photo-arrow {
+
+    width: 45px;
+
+    height: 45px;
+
+    padding: 0;
+
+    margin: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background-color: white;
+
+    color: #333;
+
+    font-size: 38px;
+
+    font-family: Arial, sans-serif;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+
+}
+
+.photo-arrow:hover {
+
+    background-color: #e5e5e5;
+
+    transform: scale(1.05);
+
+}
+
+.photo-arrow:active {
+
+    transform: scale(0.95);
+
+}
+
+
+/* =====================================================
+PHOTO NUMBER
+===================================================== */
+
+#photo-number {
+
+    min-width: 50px;
+
+    text-align: center;
+
+    font-size: 16px;
+
+    color: #333;
+
+}
+
+
+/* =====================================================
+ANSWER SECTION
+===================================================== */
+
+.answer-section {
+
+    width: 100%;
+
+    position: relative;
+
+}
+
+
+/* =====================================================
+ANSWER CONTROLS
+===================================================== */
+
+.answer-buttons {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    align-items: stretch;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-top: 15px;
+
+}
+
+
+/* =====================================================
+NAME INPUT
+===================================================== */
+
+#plant-name {
+
+    display: block;
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 0;
+
+    font-size: 18px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+}
+
+
+/* =====================================================
+NATIVE / INTRODUCED
+===================================================== */
+
+#plant-status {
+
+    display: block;
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 15px;
+
+    font-size: 18px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    background-color: white;
+
+}
+
+
+/* =====================================================
+SUBMIT BUTTON
+===================================================== */
+
+#submit-answer {
+
+    width: 100%;
+
+    padding: 12px 10px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #1976d2;
+
+    color: white;
+
+    white-space: nowrap;
+
+}
+
+#submit-answer:hover {
+
+    background-color: #125ca3;
+
+}
+
+#submit-answer:disabled {
+
+    background-color: #999;
+
+    cursor: default;
+
+}
+
+
+/* =====================================================
+NEXT PLANT BUTTON
+===================================================== */
+
+#next-plant {
+
+    width: 100%;
+
+    padding: 12px 10px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #2e7d32;
+
+    color: white;
+
+    white-space: nowrap;
+
+    display: block;
+
+}
+
+#next-plant:hover {
+
+    background-color: #256628;
+
+}
+
+#next-plant:disabled {
+
+    background-color: #999;
+
+    cursor: default;
+
+}
+
+
+/* =====================================================
+RESULT
+===================================================== */
+
+#result {
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background-color: white;
+
+    border-radius: 8px;
+
+    font-size: 18px;
+
+    text-align: left;
+
+    display: none;
+
+}
+
+.correct {
+
+    color: #2e7d32;
+
+    font-weight: bold;
+
+}
+
+.incorrect {
+
+    color: #c62828;
+
+    font-weight: bold;
+
+}
+
+
+/* =====================================================
+PLANT INFORMATION
+===================================================== */
+
+#plant-information {
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background-color: white;
+
+    border-radius: 8px;
+
+    text-align: left;
+
+    display: none;
+
+}
+
+#plant-information h2 {
+
+    margin-top: 0;
+
+}
+
+#plant-information p {
+
+    line-height: 1.6;
+
+}
+
+
+/* =====================================================
+RIGHT COLUMN
+===================================================== */
+
+.right-column {
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+}
+
+
+/* =====================================================
+PLANTS TO REVIEW
+===================================================== */
+
+.review-section {
+
+    display: none;
+
+    width: 100%;
+
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+    max-height: 500px;
+
+    overflow-y: auto;
+
+}
+
+.review-section h2 {
+
+    margin-top: 0;
+
+    color: #c62828;
+
+}
+
+.review-section h3 {
+
+    margin-top: 15px;
+
+}
+
+.review-plant {
+
+    background-color: #f9f9f9;
+
+    padding: 15px;
+
+    margin-top: 10px;
+
+    border-radius: 6px;
+
+    border-left: 5px solid #c62828;
+
+}
+
+.review-plant strong {
+
+    font-size: 18px;
+
+}
+
+
+/* =====================================================
+TEST COMPLETE
+===================================================== */
+
+#test-complete {
+
+    display: none;
+
+    width: 100%;
+
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    margin-top: 20px;
+
+    text-align: center;
+
+}
+
+#test-complete h2 {
+
+    margin-top: 0;
+
+}
+
+#final-score {
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: #2e7d32;
+
+    margin-bottom: 25px;
+
+}
+
+
+/* =====================================================
+RESTART BUTTON
+===================================================== */
+
+#restart-test {
+
+    margin-top: 25px;
+
+    padding: 12px 30px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #1976d2;
+
+    color: white;
+
+}
+
+#restart-test:hover {
+
+    background-color: #125ca3;
+
+}
+
+
+/* =====================================================
+MEDIUM SCREENS
+===================================================== */
+
+@media (max-width: 1600px) {
+
+    .trainer {
+
+        width: calc(100% - 210px);
+
+        margin-left: 180px;
+
+        margin-right: 20px;
+
+    }
+
+    .main-content {
+
+        grid-template-columns:
+            minmax(450px, 700px)
+            minmax(280px, 400px)
+            minmax(280px, 400px);
+
+        gap: 20px;
+
+    }
+
+}
+
+
+/* =====================================================
+SMALLER DESKTOP
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .trainer {
+
+        width: calc(100% - 190px);
+
+        margin-left: 170px;
+
+        margin-right: 20px;
+
+    }
+
+    .main-content {
+
+        grid-template-columns:
+            minmax(400px, 600px)
+            minmax(260px, 350px)
+            minmax(260px, 350px);
+
+        gap: 15px;
+
+    }
+
+}
+
+
+/* =====================================================
+TABLET / MOBILE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    #score {
+
+        position: static;
+
+        width: 150px;
+
+        margin: 15px auto;
+
+    }
+
+    body {
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+    }
+
+    .trainer {
+
+        width: 90%;
+
+        margin: 0 auto;
+
+        padding: 15px 0;
+
+    }
+
+    .main-content {
+
+        grid-template-columns: 1fr;
+
+        max-width: 800px;
+
+        margin: 0 auto;
+
+    }
+
+    #plant-image {
+
+        height: 500px;
+
+    }
+
+    .review-section {
+
+        max-height: none;
+
+    }
+
+}
+
+
+/* =====================================================
+MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .trainer {
+
+        width: 94%;
+
+        padding: 15px 0;
+
+    }
+
+    #plant-image {
+
+        height: 400px;
+
+    }
+
+    .photo-controls {
+
+        gap: 12px;
+
+    }
+
+    .photo-arrow {
+
+        width: 42px;
+
+        height: 42px;
+
+        font-size: 34px;
+
+    }
+
+    .answer-buttons {
+
+        gap: 6px;
+
+    }
+
+    #submit-answer,
+    #next-plant {
+
+        padding: 10px 8px;
+
+        font-size: 16px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+PROGRESS
+===================================================== -->
+
+<div id="score">
+
+    <div id="score-number">
+
+        Answered: 0 / 0
+
+    </div>
+
+    <div>
+
+        Progress
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+MAIN TRAINER
+===================================================== -->
+
+<div class="trainer">
+
+    <div class="main-content">
+
+
+        <!-- =================================================
+             LEFT: PHOTO
+        ================================================== -->
+
+        <div class="photo-section">
+
+            <img
+                id="plant-image"
+                src=""
+                alt="Plant"
+            >
+
+            <div class="photo-controls">
+
+                <button
+                    type="button"
+                    class="photo-arrow"
+                    onclick="previousPhoto()"
+                    aria-label="Previous photo"
+                    title="Previous photo"
+                >
+                    ‹
+                </button>
+
+                <span id="photo-number">
+                    1 / 1
+                </span>
+
+                <button
+                    type="button"
+                    class="photo-arrow"
+                    onclick="nextPhoto()"
+                    aria-label="Next photo"
+                    title="Next photo"
+                >
+                    ›
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MIDDLE: ANSWER
+        ================================================== -->
+
+        <div class="answer-section">
+
+            <input
+                type="text"
+                id="plant-name"
+                placeholder="Scientific or common name"
+            >
+
+
+            <select id="plant-status">
+
+                <option value="">
+                    Select Native or Introduced
+                </option>
+
+                <option value="Native">
+                    Native
+                </option>
+
+                <option value="Introduced">
+                    Introduced
+                </option>
+
+            </select>
+
+
+            <!-- =================================================
+                 BOTH BUTTONS ARE ALWAYS VISIBLE
+            ================================================== -->
+
+            <div class="answer-buttons">
+
+                <button
+                    id="submit-answer"
+                    onclick="submitAnswer()"
+                >
+                    Submit Answer
+                </button>
+
+                <button
+                    id="next-plant"
+                    onclick="nextPlant()"
+                >
+                    Next Plant →
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 RESULT
+            ================================================== -->
+
+            <div id="result"></div>
+
+
+            <!-- =================================================
+                 PLANT INFORMATION
+            ================================================== -->
+
+            <div id="plant-information"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT: REVIEW + TEST COMPLETE
+        ================================================== -->
+
+        <div class="right-column">
+
+
+            <div
+                id="review-section"
+                class="review-section"
+            >
+
+                <div id="incorrect-plants"></div>
+
+            </div>
+
+
+            <div id="test-complete">
+
+                <h2>
+                    Daily Test Complete
+                </h2>
+
+                <div id="final-score">
+                    Score: 0 / 0
+                </div>
+
+                <button
+                    id="restart-test"
+                    onclick="restartTest()"
+                >
+                    Start Again
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* =====================================================
+YOUR PLANTS
+===================================================== */
+
+const plants = [
+
+    {
+        scientificName: "Lantana camara",
+        commonName: "Common Lantana",
+        status: "Introduced",
+        family: "Verbenaceae - Verbena Family",
+
+        photos: [
+            "plants/Lantana camara - common lantana/photo1.jpg",
+            "plants/Lantana camara - common lantana/photo2.jpg",
+            "plants/Lantana camara - common lantana/photo3.jpg"
+        ],
+
+        information:
+            "Lantana camara (common lantana) is a species of flowering plant in the verbena family (Verbenaceae), native to the tropics of the Americas. It is a very adaptable species, which can inhabit a wide variety of ecosystems; once it has been introduced into a habitat it spreads rapidly; between 45ºN and 45ºS and less than 1,400 metres (4,600 feet) in altitude."
+    },
+
+
+    {
+        scientificName: "Dianella caerulea",
+        commonName: "Blue Flax-Lily",
+        status: "Native",
+        family: "Asphodelaceae - Aloe Family",
+
+        photos: [
+            "plants/Dianella caerulea - blue flax-lily/photo1.jpg",
+            "plants/Dianella caerulea - blue flax-lily/photo2.jpg",
+            "plants/Dianella caerulea - blue flax-lily/photo3.jpg"
+        ],
+
+        information:
+            "Dianella caerulea, commonly known as the blue flax-lily, blueberry lily, or paroo lily, is a perennial herb of the family Asphodelaceae, subfamily Hemerocallidoideae, found across the eastern states of Australia and Tasmania. It is a hardy plant, growing to a height and width of around 1 metre with grass-like strappy leaves. Blue flowers in spring and summer are followed by indigo-coloured berries. It adapts readily to cultivation and is commonly seen in Australian gardens and amenities plantings."
+    },
+
+
+    {
+        scientificName: "Brunoniella australis",
+        commonName: "Blue Trumpet",
+        status: "Native",
+        family: "Acanthaceae - Acanthus Family",
+
+        photos: [
+            "plants/Brunoniella australis - blue trumpet/photo1.jpg",
+            "plants/Brunoniella australis - blue trumpet/photo2.jpg",
+            "plants/Brunoniella australis - blue trumpet/photo3.jpg"
+        ],
+
+        information:
+            "Brunoniella australis, the blue trumpet or blue yam, is a plant native of Australia. A widespread herbaceous plant, found in moist areas of eucalyptus woodland and forest, particularly on sloping ground. It is a small plant between 2–30 cm (0.8–10 in) tall."
+    },
+
+
+    {
+        scientificName: "Breynia oblongifolia",
+        commonName: "Coffee Bush",
+        status: "Native",
+        family: "Phyllanthaceae Leaf-flower Family",
+
+        photos: [
+            "plants/Breynia oblongifolia - coffee bush/photo1.jpg",
+            "plants/Breynia oblongifolia - coffee bush/photo2.jpg",
+            "plants/Breynia oblongifolia - coffee bush/photo3.jpg"
+        ],
+
+        information:
+            "Breynia oblongifolia, commonly known as coffee bush, grows naturally in Australia and New Guinea as shrubs up to 3 m (10 ft) in height. The species produces alternate, distichous, ovate leaves 20–30 mm (0.8–1.2 in) long by 10–20 mm (0.4–0.8 in) wide. Small, green flowers are produced in spring and summer, and these are followed by orange or pink berries about 6 mm (0.24 in) diameter that turn black when fully ripe."
+    },
+
+
+    {
+        scientificName: "Cirsium vulgare",
+        commonName: "Bull Thistle",
+        status: "Introduced",
+        family: "Asteraceae - Sunflowers, Daisies, Asters, and Allies",
+
+        photos: [
+            "plants/Cirsium vulgare - bull thistle/photo1.jpg",
+            "plants/Cirsium vulgare - bull thistle/photo2.jpg",
+            "plants/Cirsium vulgare - bull thistle/photo3.jpg"
+        ],
+
+        information:
+            "Cirsium vulgare, commonly known as spear thistle, bull thistle, or common thistle, is a species of the Asteraceae genus Cirsium, native throughout most of Europe, Western Asia (east to the Yenisei Valley), and northwestern Africa (Atlas Mountains). It is also naturalised in North America, Africa, and Australia and is an invasive weed in several regions. It is the national flower of Scotland."
+    },
+
+
+    {
+        scientificName: "Dillwynia sieberi",
+        commonName: "Sieber's Parrot-Pea",
+        status: "Native",
+        family: "Fabaceae - Legumes",
+
+        photos: [
+            "plants/Dillwynia sieberi - sieber's parrot-pea/photo1.jpg",
+            "plants/Dillwynia sieberi - sieber's parrot-pea/photo2.jpg",
+            "plants/Dillwynia sieberi - sieber's parrot-pea/photo3.jpg"
+        ],
+
+        information:
+            "Dillwynia sieberi, commonly known as Sieber's parrot-pea, is a species of flowering plant in the family Fabaceae and is endemic to eastern Australia. It is an erect shrub with rigid, needle-shaped, sharply-pointed leaves and yellow to yellow-orange flowers with reddish-brown markings."
+    },
+
+
+    {
+        scientificName: "Crassula multicava",
+        commonName: "Fairy Stonecrop",
+        status: "Introduced",
+        family: "Crassulaceae - Stonecrop Family",
+
+        photos: [
+            "plants/Crassula multicava - fairy stonecrop/photo1.jpg",
+            "plants/Crassula multicava - fairy stonecrop/photo2.jpg",
+            "plants/Crassula multicava - fairy stonecrop/photo3.jpg"
+        ],
+
+        information:
+            "Crassula multicava is a perennial succulent plant from the family Crassulaceae. It is also known under various English common names including the fairy crassula, pitted crassula and London pride. In Zulu, it is known as umadinsane, one of several plants known by this name."
+    }
+
+];
+
+
+/* =====================================================
+TEST VARIABLES
+===================================================== */
+
+let currentPlant = 0;
+
+let currentPhoto = 0;
+
+let correctAnswers = 0;
+
+let attemptedAnswers = 0;
+
+let shuffledPlants = [];
+
+/*
+ * Queue contains plants that still need answering.
+ */
+
+let plantQueue = [];
+
+let incorrectPlants = [];
+
+/*
+ * Whether the currently displayed plant has been
+ * answered.
+ */
+
+let currentPlantAnswered = false;
+
+
+/* =====================================================
+SHUFFLE PLANTS
+===================================================== */
+
+function shufflePlants() {
+
+    shuffledPlants = [...plants];
+
+    for (
+        let i = shuffledPlants.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            shuffledPlants[i],
+            shuffledPlants[j]
+        ] =
+        [
+            shuffledPlants[j],
+            shuffledPlants[i]
+        ];
+
+    }
+
+    plantQueue = [...shuffledPlants];
+
+}
+
+
+/* =====================================================
+SHOW PHOTO
+===================================================== */
+
+function showPhoto() {
+
+    if (plantQueue.length === 0) {
+        return;
+    }
+
+    const plant =
+        plantQueue[currentPlant];
+
+    document.getElementById(
+        "plant-image"
+    ).src =
+        plant.photos[currentPhoto];
+
+    document.getElementById(
+        "photo-number"
+    ).textContent =
+
+        (currentPhoto + 1) +
+        " / " +
+        plant.photos.length;
+
+}
+
+
+/* =====================================================
+NEXT PHOTO
+===================================================== */
+
+function nextPhoto() {
+
+    if (plantQueue.length === 0) {
+        return;
+    }
+
+    currentPhoto++;
+
+    if (
+        currentPhoto >=
+        plantQueue[currentPlant].photos.length
+    ) {
+
+        currentPhoto = 0;
+
+    }
+
+    showPhoto();
+
+}
+
+
+/* =====================================================
+PREVIOUS PHOTO
+===================================================== */
+
+function previousPhoto() {
+
+    if (plantQueue.length === 0) {
+        return;
+    }
+
+    currentPhoto--;
+
+    if (currentPhoto < 0) {
+
+        currentPhoto =
+            plantQueue[currentPlant].photos.length - 1;
+
+    }
+
+    showPhoto();
+
+}
+
+
+/* =====================================================
+SUBMIT ANSWER
+===================================================== */
+
+function submitAnswer() {
+
+    if (currentPlantAnswered) {
+        return;
+    }
+
+    if (plantQueue.length === 0) {
+        return;
+    }
+
+
+    const userName =
+
+        document
+        .getElementById("plant-name")
+        .value
+        .trim();
+
+
+    const userStatus =
+
+        document
+        .getElementById("plant-status")
+        .value;
+
+
+    const plant =
+        plantQueue[currentPlant];
+
+
+    const enteredName =
+        userName.toLowerCase();
+
+
+    const scientificName =
+        plant.scientificName.toLowerCase();
+
+
+    const commonName =
+        plant.commonName.toLowerCase();
+
+
+    const nameCorrect =
+
+        enteredName === scientificName ||
+        enteredName === commonName;
+
+
+    const statusCorrect =
+        userStatus === plant.status;
+
+
+    const overallCorrect =
+        nameCorrect && statusCorrect;
+
+
+    attemptedAnswers++;
+
+
+    if (overallCorrect) {
+
+        correctAnswers++;
+
+    }
+    else {
+
+        incorrectPlants.push(plant);
+
+    }
+
+
+    currentPlantAnswered = true;
+
+
+    updateScore();
+
+
+    /* =================================================
+       RESULT
+    ================================================= */
+
+    let resultHTML = "";
+
+
+    if (nameCorrect) {
+
+        resultHTML +=
+
+            '<div class="correct">' +
+            '✓ Plant name correct!' +
+            '</div>';
+
+    }
+    else {
+
+        resultHTML +=
+
+            '<div class="incorrect">' +
+            '✗ Plant name incorrect.' +
+            '</div>';
+
+        resultHTML +=
+
+            '<p>' +
+            'Scientific name: <strong>' +
+            plant.scientificName +
+            '</strong><br>' +
+            'Common name: <strong>' +
+            plant.commonName +
+            '</strong>' +
+            '</p>';
+
+    }
+
+
+    if (statusCorrect) {
+
+        resultHTML +=
+
+            '<div class="correct">' +
+            '✓ Native / Introduced correct!' +
+            '</div>';
+
+    }
+    else {
+
+        resultHTML +=
+
+            '<div class="incorrect">' +
+            '✗ Native / Introduced incorrect.' +
+            '</div>';
+
+        resultHTML +=
+
+            '<p>' +
+            'Correct answer: <strong>' +
+            plant.status +
+            '</strong>' +
+            '</p>';
+
+    }
+
+
+    resultHTML += "<hr>";
+
+
+    if (overallCorrect) {
+
+        resultHTML +=
+
+            '<div class="correct">' +
+            '✓ Correct! Both answers were right.' +
+            '</div>';
+
+    }
+    else {
+
+        resultHTML +=
+
+            '<div class="incorrect">' +
+            '✗ Incorrect. Both answers must be correct.' +
+            '</div>';
+
+    }
+
+
+    document.getElementById(
+        "result"
+    ).innerHTML = resultHTML;
+
+
+    document.getElementById(
+        "result"
+    ).style.display = "block";
+
+
+    /* =================================================
+       PLANT INFORMATION
+    ================================================= */
+
+    const information =
+        document.getElementById(
+            "plant-information"
+        );
+
+
+    let informationHTML =
+
+        "<h2>" +
+        plant.scientificName +
+        "</h2>" +
+
+        "<p>" +
+        "<strong>Common name:</strong> " +
+        plant.commonName +
+        "</p>" +
+
+        "<p>" +
+        "<strong>Status:</strong> " +
+        plant.status +
+        "</p>";
+
+
+    if (plant.family) {
+
+        informationHTML +=
+
+            "<p>" +
+            "<strong>Family:</strong> " +
+            plant.family +
+            "</p>";
+
+    }
+
+
+    if (plant.information) {
+
+        informationHTML +=
+
+            "<p>" +
+            plant.information +
+            "</p>";
+
+    }
+
+
+    information.innerHTML =
+        informationHTML;
+
+
+    information.style.display =
+        "block";
+
+
+    /* =================================================
+       REMOVE ANSWERED PLANT
+    ================================================= */
+
+    plantQueue.splice(
+        currentPlant,
+        1
+    );
+
+
+    /* =================================================
+       CHECK COMPLETE
+    ================================================= */
+
+    if (plantQueue.length === 0) {
+
+        document.getElementById(
+            "test-complete"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "final-score"
+        ).textContent =
+
+            "Score: " +
+            correctAnswers +
+            " / " +
+            attemptedAnswers;
+
+
+        showIncorrectPlants();
+
+
+        document.getElementById(
+            "submit-answer"
+        ).disabled = true;
+
+
+        document.getElementById(
+            "next-plant"
+        ).disabled = true;
+
+
+        return;
+
+    }
+
+
+    /*
+     * After removing the answered plant, the same
+     * index now points to the next plant.
+     */
+
+    if (
+        currentPlant >=
+        plantQueue.length
+    ) {
+
+        currentPlant = 0;
+
+    }
+
+}
+
+
+/* =====================================================
+UPDATE PROGRESS
+===================================================== */
+
+function updateScore() {
+
+    document.getElementById(
+        "score-number"
+    ).textContent =
+
+        "Answered: " +
+        attemptedAnswers +
+        " / " +
+        plants.length;
+
+}
+
+
+/* =====================================================
+SHOW INCORRECT PLANTS
+===================================================== */
+
+function showIncorrectPlants() {
+
+    const reviewSection =
+        document.getElementById(
+            "review-section"
+        );
+
+
+    const incorrectList =
+        document.getElementById(
+            "incorrect-plants"
+        );
+
+
+    reviewSection.style.display =
+        "block";
+
+
+    if (incorrectPlants.length === 0) {
+
+        incorrectList.innerHTML =
+
+            "<h2>Plants to review</h2>" +
+
+            "<h3>Perfect score! 🎉</h3>" +
+
+            "<p>" +
+            "You got every plant correct." +
+            "</p>";
+
+        return;
+
+    }
+
+
+    let html =
+        "<h2>Plants to review</h2>";
+
+
+    incorrectPlants.forEach(
+        function(plant) {
+
+            html +=
+
+                '<div class="review-plant">' +
+
+                    "<strong>" +
+                    plant.scientificName +
+                    "</strong>" +
+
+                    "<br><br>" +
+
+                    "<strong>Common name:</strong> " +
+                    plant.commonName +
+
+                    "<br>" +
+
+                    "<strong>Status:</strong> " +
+                    plant.status +
+
+                    "<br>" +
+
+                    "<strong>Family:</strong> " +
+                    plant.family +
+
+                "</div>";
+
+        }
+    );
+
+
+    incorrectList.innerHTML = html;
+
+}
+
+
+/* =====================================================
+NEXT PLANT / SKIP
+===================================================== */
+
+function nextPlant() {
+
+    if (plantQueue.length === 0) {
+        return;
+    }
+
+
+    /*
+     * CURRENT PLANT HAS NOT BEEN ANSWERED
+     *
+     * Move it to the END of the queue.
+     */
+
+    if (!currentPlantAnswered) {
+
+        const skippedPlant =
+            plantQueue.splice(
+                currentPlant,
+                1
+            )[0];
+
+
+        plantQueue.push(
+            skippedPlant
+        );
+
+    }
+
+
+    /*
+     * CURRENT PLANT HAS BEEN ANSWERED
+     *
+     * It was already removed by submitAnswer().
+     */
+
+    if (currentPlant >= plantQueue.length) {
+
+        currentPlant = 0;
+
+    }
+
+
+    /*
+     * Reset state for the new plant.
+     */
+
+    currentPlantAnswered = false;
+
+    currentPhoto = 0;
+
+
+    /* =================================================
+       CLEAR ANSWERS
+    ================================================= */
+
+    document.getElementById(
+        "plant-name"
+    ).value = "";
+
+
+    document.getElementById(
+        "plant-status"
+    ).value = "";
+
+
+    /* =================================================
+       HIDE OLD RESULT
+    ================================================= */
+
+    document.getElementById(
+        "result"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "plant-information"
+    ).style.display = "none";
+
+
+    /* =================================================
+       ENABLE SUBMIT
+    ================================================= */
+
+    document.getElementById(
+        "submit-answer"
+    ).disabled = false;
+
+
+    updateScore();
+
+    showPhoto();
+
+
+    document.getElementById(
+        "plant-name"
+    ).focus();
+
+}
+
+
+/* =====================================================
+RESTART TEST
+===================================================== */
+
+function restartTest() {
+
+    correctAnswers = 0;
+
+    attemptedAnswers = 0;
+
+    incorrectPlants = [];
+
+    currentPlant = 0;
+
+    currentPhoto = 0;
+
+    currentPlantAnswered = false;
+
+
+    shufflePlants();
+
+
+    updateScore();
+
+
+    /* =================================================
+       RESET DISPLAY
+    ================================================= */
+
+    document.getElementById(
+        "test-complete"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "review-section"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "result"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "plant-information"
+    ).style.display = "none";
+
+
+    /* =================================================
+       ENABLE BUTTONS
+    ================================================= */
+
+    document.getElementById(
+        "submit-answer"
+    ).disabled = false;
+
+
+    document.getElementById(
+        "next-plant"
+    ).disabled = false;
+
+
+    /* =================================================
+       CLEAR ANSWERS
+    ================================================= */
+
+    document.getElementById(
+        "plant-name"
+    ).value = "";
+
+
+    document.getElementById(
+        "plant-status"
+    ).value = "";
+
+
+    /* =================================================
+       SHOW FIRST PLANT
+    ================================================= */
+
+    showPhoto();
+
+
+    document.getElementById(
+        "plant-name"
+    ).focus();
+
+}
+
+
+/* =====================================================
+START TEST
+===================================================== */
+
+restartTest();
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function() {
+
+        navigator.serviceWorker.register(
+            "./service-worker.js"
+        );
+
+    });
+
+}
+
+</script>
+
+</body>
+
+</html>

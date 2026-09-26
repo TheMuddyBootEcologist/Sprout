@@ -1,0 +1,64 @@
+const CACHE_NAME = "flora-trainer-v1";
+
+const FILES_TO_CACHE = [
+    "./",
+    "./index.html",
+    "./manifest.json",
+    "./icon-192.png",
+    "./icon-512.png",
+
+    "./plants/Lantana camara - common lantana/photo1.jpg",
+    "./plants/Lantana camara - common lantana/photo2.jpg",
+    "./plants/Lantana camara - common lantana/photo3.jpg",
+
+    "./plants/Dianella caerulea - blue flax-lily/photo1.jpg",
+    "./plants/Dianella caerulea - blue flax-lily/photo2.jpg",
+    "./plants/Dianella caerulea - blue flax-lily/photo3.jpg",
+
+    "./plants/Brunoniella australis - blue trumpet/photo1.jpg",
+    "./plants/Brunoniella australis - blue trumpet/photo2.jpg",
+    "./plants/Brunoniella australis - blue trumpet/photo3.jpg",
+
+    "./plants/Breynia oblongifolia - coffee bush/photo1.jpg",
+    "./plants/Breynia oblongifolia - coffee bush/photo2.jpg",
+    "./plants/Breynia oblongifolia - coffee bush/photo3.jpg",
+
+    "./plants/Cirsium vulgare - bull thistle/photo1.jpg",
+    "./plants/Cirsium vulgare - bull thistle/photo2.jpg",
+    "./plants/Cirsium vulgare - bull thistle/photo3.jpg",
+
+    "./plants/Dillwynia sieberi - sieber's parrot-pea/photo1.jpg",
+    "./plants/Dillwynia sieberi - sieber's parrot-pea/photo2.jpg",
+    "./plants/Dillwynia sieberi - sieber's parrot-pea/photo3.jpg",
+
+    "./plants/Crassula multicava - fairy stonecrop/photo1.jpg",
+    "./plants/Crassula multicava - fairy stonecrop/photo2.jpg",
+    "./plants/Crassula multicava - fairy stonecrop/photo3.jpg"
+];
+
+self.addEventListener("install", event => {
+
+    event.waitUntil(
+
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(FILES_TO_CACHE))
+
+    );
+
+});
+
+
+self.addEventListener("fetch", event => {
+
+    event.respondWith(
+
+        caches.match(event.request)
+            .then(response => {
+
+                return response || fetch(event.request);
+
+            })
+
+    );
+
+});
