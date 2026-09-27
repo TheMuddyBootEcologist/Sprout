@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -42,6 +43,8 @@ body {
     min-height: 100vh;
 
     overflow-x: hidden;
+
+    overflow-y: hidden;
 
 }
 
@@ -941,9 +944,7 @@ MOBILE
 
 </head>
 
-
 <body>
-
 
 <!-- =====================================================
 PROGRESS
@@ -951,14 +952,15 @@ PROGRESS
 
 <div id="score">
 
-    <div id="score-number">
+```
+<div id="score-number">
 
-        Answered: 0 / 0
-
-    </div>
+    Answered: 0 / 0
 
 </div>
+```
 
+</div>
 
 <!-- =====================================================
 MAIN TRAINER
@@ -966,177 +968,178 @@ MAIN TRAINER
 
 <div class="trainer">
 
-    <div class="main-content">
+```
+<div class="main-content">
+
+
+    <!-- =================================================
+         LEFT: PHOTO
+    ================================================== -->
+
+    <div class="photo-section">
+
+        <img
+            id="plant-image"
+            src=""
+            alt="Plant"
+        >
+
+        <div class="photo-controls">
+
+            <button
+                type="button"
+                class="photo-arrow"
+                onclick="previousPhoto()"
+                aria-label="Previous photo"
+                title="Previous photo"
+            >
+                ‹
+            </button>
+
+            <span id="photo-number">
+                1 / 1
+            </span>
+
+            <button
+                type="button"
+                class="photo-arrow"
+                onclick="nextPhoto()"
+                aria-label="Next photo"
+                title="Next photo"
+            >
+                ›
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         MIDDLE: ANSWER
+    ================================================== -->
+
+    <div class="answer-section">
+
+        <input
+            type="text"
+            id="plant-name"
+            placeholder="Scientific or common name"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+        >
 
 
         <!-- =================================================
-             LEFT: PHOTO
+             NATIVE / INTRODUCED
         ================================================== -->
 
-        <div class="photo-section">
+        <div class="status-buttons">
 
-            <img
-                id="plant-image"
-                src=""
-                alt="Plant"
+            <button
+                type="button"
+                id="native-button"
+                class="status-button"
+                onclick="selectStatus('Native')"
             >
+                Native
+            </button>
 
-            <div class="photo-controls">
-
-                <button
-                    type="button"
-                    class="photo-arrow"
-                    onclick="previousPhoto()"
-                    aria-label="Previous photo"
-                    title="Previous photo"
-                >
-                    ‹
-                </button>
-
-                <span id="photo-number">
-                    1 / 1
-                </span>
-
-                <button
-                    type="button"
-                    class="photo-arrow"
-                    onclick="nextPhoto()"
-                    aria-label="Next photo"
-                    title="Next photo"
-                >
-                    ›
-                </button>
-
-            </div>
+            <button
+                type="button"
+                id="introduced-button"
+                class="status-button"
+                onclick="selectStatus('Introduced')"
+            >
+                Introduced
+            </button>
 
         </div>
 
 
         <!-- =================================================
-             MIDDLE: ANSWER
+             BOTH BUTTONS ARE ALWAYS VISIBLE
         ================================================== -->
 
-        <div class="answer-section">
+        <div class="answer-buttons">
 
-            <input
-                type="text"
-                id="plant-name"
-                placeholder="Scientific or common name"
-                autocomplete="off"
-                autocorrect="off"
-                autocapitalize="none"
-                spellcheck="false"
+            <button
+                id="submit-answer"
+                onclick="submitAnswer()"
             >
+                Submit Answer
+            </button>
 
-
-            <!-- =================================================
-                 NATIVE / INTRODUCED
-            ================================================== -->
-
-            <div class="status-buttons">
-
-                <button
-                    type="button"
-                    id="native-button"
-                    class="status-button"
-                    onclick="selectStatus('Native')"
-                >
-                    Native
-                </button>
-
-                <button
-                    type="button"
-                    id="introduced-button"
-                    class="status-button"
-                    onclick="selectStatus('Introduced')"
-                >
-                    Introduced
-                </button>
-
-            </div>
-
-
-            <!-- =================================================
-                 BOTH BUTTONS ARE ALWAYS VISIBLE
-            ================================================== -->
-
-            <div class="answer-buttons">
-
-                <button
-                    id="submit-answer"
-                    onclick="submitAnswer()"
-                >
-                    Submit Answer
-                </button>
-
-                <button
-                    id="next-plant"
-                    onclick="nextPlant()"
-                >
-                    Next Plant →
-                </button>
-
-            </div>
-
-
-            <!-- =================================================
-                 RESULT
-            ================================================== -->
-
-            <div id="result"></div>
-
-
-            <!-- =================================================
-                 PLANT INFORMATION
-            ================================================== -->
-
-            <div id="plant-information"></div>
+            <button
+                id="next-plant"
+                onclick="nextPlant()"
+            >
+                Next Plant →
+            </button>
 
         </div>
 
 
         <!-- =================================================
-             RIGHT: REVIEW + TEST COMPLETE
+             RESULT
         ================================================== -->
 
-        <div class="right-column">
+        <div id="result"></div>
 
 
-            <div
-                id="review-section"
-                class="review-section"
+        <!-- =================================================
+             PLANT INFORMATION
+        ================================================== -->
+
+        <div id="plant-information"></div>
+
+    </div>
+
+
+    <!-- =================================================
+         RIGHT: REVIEW + TEST COMPLETE
+    ================================================== -->
+
+    <div class="right-column">
+
+
+        <div
+            id="review-section"
+            class="review-section"
+        >
+
+            <div id="incorrect-plants"></div>
+
+        </div>
+
+
+        <div id="test-complete">
+
+            <h2>
+                Daily Test Complete
+            </h2>
+
+            <div id="final-score">
+                Score: 0 / 0
+            </div>
+
+            <button
+                id="restart-test"
+                onclick="restartTest()"
             >
-
-                <div id="incorrect-plants"></div>
-
-            </div>
-
-
-            <div id="test-complete">
-
-                <h2>
-                    Daily Test Complete
-                </h2>
-
-                <div id="final-score">
-                    Score: 0 / 0
-                </div>
-
-                <button
-                    id="restart-test"
-                    onclick="restartTest()"
-                >
-                    Start Again
-                </button>
-
-            </div>
+                Start Again
+            </button>
 
         </div>
 
     </div>
 
 </div>
+```
 
+</div>
 
 <script>
 
@@ -1531,6 +1534,8 @@ function submitAnswer() {
 
     currentPlantAnswered = true;
 
+    document.body.style.overflowY = "auto";
+
 
     updateScore();
 
@@ -1908,6 +1913,8 @@ function nextPlant() {
 
     currentPlantAnswered = false;
 
+    document.body.style.overflowY = "hidden";
+
     currentPhoto = 0;
 
 
@@ -1982,6 +1989,8 @@ function restartTest() {
     currentPlantAnswered = false;
 
     selectedStatus = "";
+
+    document.body.style.overflowY = "hidden";
 
 
     shufflePlants();
