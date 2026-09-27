@@ -1465,11 +1465,15 @@ MOBILE SCROLL CONTROL
 
 let scrollSnapTimeout;
 
+let isSnappingToTop = false;
+
+
 window.addEventListener("scroll", function() {
 
     if (
         window.innerWidth <= 600 &&
         !currentPlantAnswered &&
+        !isSnappingToTop &&
         window.scrollY > 0
     ) {
 
@@ -1477,12 +1481,32 @@ window.addEventListener("scroll", function() {
 
         scrollSnapTimeout = setTimeout(function() {
 
+            isSnappingToTop = true;
+
             window.scrollTo({
                 top: 0,
+                left: 0,
                 behavior: "smooth"
             });
 
-        }, 50);
+            /*
+             * Force the document to the absolute
+             * top after the smooth scroll finishes.
+             */
+
+            setTimeout(function() {
+
+                window.scrollTo(0, 0);
+
+                document.documentElement.scrollTop = 0;
+
+                document.body.scrollTop = 0;
+
+                isSnappingToTop = false;
+
+            }, 400);
+
+        }, 100);
 
     }
 
@@ -1939,10 +1963,27 @@ function nextPlant() {
 
     currentPlantAnswered = false;
 
+
+    isSnappingToTop = true;
+
     window.scrollTo({
         top: 0,
+        left: 0,
         behavior: "smooth"
     });
+
+    setTimeout(function() {
+
+        window.scrollTo(0, 0);
+
+        document.documentElement.scrollTop = 0;
+
+        document.body.scrollTop = 0;
+
+        isSnappingToTop = false;
+
+    }, 400);
+
 
     currentPhoto = 0;
 
@@ -2017,10 +2058,27 @@ function restartTest() {
 
     currentPlantAnswered = false;
 
+
+    isSnappingToTop = true;
+
     window.scrollTo({
         top: 0,
+        left: 0,
         behavior: "smooth"
     });
+
+    setTimeout(function() {
+
+        window.scrollTo(0, 0);
+
+        document.documentElement.scrollTop = 0;
+
+        document.body.scrollTop = 0;
+
+        isSnappingToTop = false;
+
+    }, 400);
+
 
     selectedStatus = "";
 
@@ -2120,4 +2178,3 @@ if ("serviceWorker" in navigator) {
 </body>
 
 </html>
-```
