@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -32,20 +31,17 @@ GENERAL PAGE
     box-sizing: border-box;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-}
-
 body {
 
     font-family: Arial, sans-serif;
 
     background-color: #f2f2f2;
 
+    margin: 0;
+
     min-height: 100vh;
+
+    overflow-x: hidden;
 
 }
 
@@ -78,8 +74,6 @@ PROGRESS
 
     z-index: 100;
 
-    overflow: hidden;
-
 }
 
 #score-number {
@@ -91,10 +85,6 @@ PROGRESS
     color: #2e7d32;
 
     margin-bottom: 5px;
-
-    overflow: hidden;
-
-    white-space: nowrap;
 
 }
 
@@ -150,8 +140,6 @@ PHOTO SECTION
 
     width: 100%;
 
-    overflow: hidden;
-
 }
 
 
@@ -178,6 +166,10 @@ PLANT IMAGE
 
 /* =====================================================
 PHOTO NAVIGATION
+
+The controls use the full width of the photo section.
+This guarantees that the entire navigation group is
+centred directly underneath the image box.
 ===================================================== */
 
 .photo-controls {
@@ -195,8 +187,6 @@ PHOTO NAVIGATION
     gap: 20px;
 
     height: 50px;
-
-    overflow: hidden;
 
 }
 
@@ -243,12 +233,6 @@ PHOTO ARROWS
         background-color 0.2s ease,
         transform 0.2s ease;
 
-    appearance: none;
-
-    -webkit-appearance: none;
-
-    overflow: hidden;
-
 }
 
 .photo-arrow:hover {
@@ -280,10 +264,6 @@ PHOTO NUMBER
 
     color: #333;
 
-    overflow: hidden;
-
-    white-space: nowrap;
-
 }
 
 
@@ -297,7 +277,26 @@ ANSWER SECTION
 
     position: relative;
 
-    overflow: hidden;
+}
+
+
+/* =====================================================
+ANSWER CONTROLS
+===================================================== */
+
+.answer-buttons {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    align-items: stretch;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-top: 15px;
 
 }
 
@@ -345,6 +344,8 @@ NATIVE / INTRODUCED BUTTONS
 
 .status-button {
 
+    display: block;
+
     width: 100%;
 
     padding: 15px;
@@ -361,30 +362,13 @@ NATIVE / INTRODUCED BUTTONS
 
     cursor: pointer;
 
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
-
-    appearance: none;
-
-    -webkit-appearance: none;
-
-    overflow: hidden;
-
-    white-space: nowrap;
+    font-family: Arial, sans-serif;
 
 }
 
 .status-button:hover {
 
     background-color: #f0f0f0;
-
-}
-
-.status-button:active {
-
-    transform: scale(0.98);
 
 }
 
@@ -395,27 +379,6 @@ NATIVE / INTRODUCED BUTTONS
     color: white;
 
     border-color: #2e7d32;
-
-}
-
-
-/* =====================================================
-ANSWER CONTROLS
-===================================================== */
-
-.answer-buttons {
-
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    align-items: stretch;
-
-    gap: 10px;
-
-    width: 100%;
-
-    margin-top: 15px;
 
 }
 
@@ -443,12 +406,6 @@ SUBMIT BUTTON
     color: white;
 
     white-space: nowrap;
-
-    appearance: none;
-
-    -webkit-appearance: none;
-
-    overflow: hidden;
 
 }
 
@@ -493,12 +450,6 @@ NEXT PLANT BUTTON
 
     display: block;
 
-    appearance: none;
-
-    -webkit-appearance: none;
-
-    overflow: hidden;
-
 }
 
 #next-plant:hover {
@@ -535,8 +486,6 @@ RESULT
     text-align: left;
 
     display: none;
-
-    overflow: hidden;
 
 }
 
@@ -575,8 +524,6 @@ PLANT INFORMATION
 
     display: none;
 
-    overflow: hidden;
-
 }
 
 #plant-information h2 {
@@ -605,8 +552,6 @@ RIGHT COLUMN
     flex-direction: column;
 
     align-items: stretch;
-
-    overflow: hidden;
 
 }
 
@@ -690,8 +635,6 @@ TEST COMPLETE
 
     text-align: center;
 
-    overflow: hidden;
-
 }
 
 #test-complete h2 {
@@ -734,12 +677,6 @@ RESTART BUTTON
     background-color: #1976d2;
 
     color: white;
-
-    appearance: none;
-
-    -webkit-appearance: none;
-
-    overflow: hidden;
 
 }
 
@@ -878,83 +815,52 @@ MOBILE
 @media (max-width: 600px) {
 
     .trainer {
-
         width: 94%;
-
         padding: 10px 0 100px 0;
-
     }
 
     #score {
-
         margin: 10px auto 15px auto;
-
         padding: 12px;
-
         width: 140px;
-
         font-size: 16px;
-
     }
 
     #score-number {
-
         font-size: 20px;
-
     }
 
     #plant-image {
-
         height: 290px;
-
         object-fit: cover;
-
         border-radius: 8px;
-
     }
 
     .photo-controls {
-
         margin-top: 8px;
-
         height: 42px;
-
         gap: 10px;
-
     }
 
     .photo-arrow {
-
         width: 40px;
-
         height: 40px;
-
         font-size: 32px;
-
     }
 
     #photo-number {
-
         font-size: 15px;
-
         min-width: 45px;
-
     }
 
     #plant-name {
-
         padding: 13px;
-
         font-size: 17px;
-
     }
 
     .status-button {
-
         padding: 13px;
-
         font-size: 17px;
-
     }
 
 
@@ -1035,7 +941,9 @@ MOBILE
 
 </head>
 
+
 <body>
+
 
 <!-- =====================================================
 PROGRESS
@@ -1043,21 +951,20 @@ PROGRESS
 
 <div id="score">
 
-```
-<div id="score-number">
+    <div id="score-number">
 
-    Answered: 0 / 0
+        Answered: 0 / 0
 
-</div>
+    </div>
 
-<div>
+    <div>
 
-    Progress
+        Progress
 
-</div>
-```
+    </div>
 
 </div>
+
 
 <!-- =====================================================
 MAIN TRAINER
@@ -1065,178 +972,177 @@ MAIN TRAINER
 
 <div class="trainer">
 
-```
-<div class="main-content">
-
-
-    <!-- =================================================
-         LEFT: PHOTO
-    ================================================== -->
-
-    <div class="photo-section">
-
-        <img
-            id="plant-image"
-            src=""
-            alt="Plant"
-        >
-
-        <div class="photo-controls">
-
-            <button
-                type="button"
-                class="photo-arrow"
-                onclick="previousPhoto()"
-                aria-label="Previous photo"
-                title="Previous photo"
-            >
-                ‹
-            </button>
-
-            <span id="photo-number">
-                1 / 1
-            </span>
-
-            <button
-                type="button"
-                class="photo-arrow"
-                onclick="nextPhoto()"
-                aria-label="Next photo"
-                title="Next photo"
-            >
-                ›
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- =================================================
-         MIDDLE: ANSWER
-    ================================================== -->
-
-    <div class="answer-section">
-
-        <input
-            type="text"
-            id="plant-name"
-            placeholder="Scientific or common name"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-        >
+    <div class="main-content">
 
 
         <!-- =================================================
-             NATIVE / INTRODUCED
+             LEFT: PHOTO
         ================================================== -->
 
-        <div class="status-buttons">
+        <div class="photo-section">
 
-            <button
-                type="button"
-                id="native-button"
-                class="status-button"
-                onclick="selectStatus('Native')"
+            <img
+                id="plant-image"
+                src=""
+                alt="Plant"
             >
-                Native
-            </button>
 
-            <button
-                type="button"
-                id="introduced-button"
-                class="status-button"
-                onclick="selectStatus('Introduced')"
-            >
-                Introduced
-            </button>
+            <div class="photo-controls">
 
-        </div>
+                <button
+                    type="button"
+                    class="photo-arrow"
+                    onclick="previousPhoto()"
+                    aria-label="Previous photo"
+                    title="Previous photo"
+                >
+                    ‹
+                </button>
 
+                <span id="photo-number">
+                    1 / 1
+                </span>
 
-        <!-- =================================================
-             BOTH BUTTONS ARE ALWAYS VISIBLE
-        ================================================== -->
+                <button
+                    type="button"
+                    class="photo-arrow"
+                    onclick="nextPhoto()"
+                    aria-label="Next photo"
+                    title="Next photo"
+                >
+                    ›
+                </button>
 
-        <div class="answer-buttons">
-
-            <button
-                id="submit-answer"
-                onclick="submitAnswer()"
-            >
-                Submit Answer
-            </button>
-
-            <button
-                id="next-plant"
-                onclick="nextPlant()"
-            >
-                Next Plant →
-            </button>
-
-        </div>
-
-
-        <!-- =================================================
-             RESULT
-        ================================================= -->
-
-        <div id="result"></div>
-
-
-        <!-- =================================================
-             PLANT INFORMATION
-        ================================================= -->
-
-        <div id="plant-information"></div>
-
-    </div>
-
-
-    <!-- =================================================
-         RIGHT: REVIEW + TEST COMPLETE
-    ================================================== -->
-
-    <div class="right-column">
-
-
-        <div
-            id="review-section"
-            class="review-section"
-        >
-
-            <div id="incorrect-plants"></div>
-
-        </div>
-
-
-        <div id="test-complete">
-
-            <h2>
-                Daily Test Complete
-            </h2>
-
-            <div id="final-score">
-                Score: 0 / 0
             </div>
 
-            <button
-                id="restart-test"
-                onclick="restartTest()"
+        </div>
+
+
+        <!-- =================================================
+             MIDDLE: ANSWER
+        ================================================== -->
+
+        <div class="answer-section">
+
+            <input
+                type="text"
+                id="plant-name"
+                placeholder="Scientific or common name"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
             >
-                Start Again
-            </button>
+
+
+            <!-- =================================================
+                 NATIVE / INTRODUCED
+            ================================================== -->
+
+            <div class="status-buttons">
+
+                <button
+                    type="button"
+                    id="native-button"
+                    class="status-button"
+                    onclick="selectStatus('Native')"
+                >
+                    Native
+                </button>
+
+                <button
+                    type="button"
+                    id="introduced-button"
+                    class="status-button"
+                    onclick="selectStatus('Introduced')"
+                >
+                    Introduced
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 BOTH BUTTONS ARE ALWAYS VISIBLE
+            ================================================== -->
+
+            <div class="answer-buttons">
+
+                <button
+                    id="submit-answer"
+                    onclick="submitAnswer()"
+                >
+                    Submit Answer
+                </button>
+
+                <button
+                    id="next-plant"
+                    onclick="nextPlant()"
+                >
+                    Next Plant →
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 RESULT
+            ================================================== -->
+
+            <div id="result"></div>
+
+
+            <!-- =================================================
+                 PLANT INFORMATION
+            ================================================== -->
+
+            <div id="plant-information"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT: REVIEW + TEST COMPLETE
+        ================================================== -->
+
+        <div class="right-column">
+
+
+            <div
+                id="review-section"
+                class="review-section"
+            >
+
+                <div id="incorrect-plants"></div>
+
+            </div>
+
+
+            <div id="test-complete">
+
+                <h2>
+                    Daily Test Complete
+                </h2>
+
+                <div id="final-score">
+                    Score: 0 / 0
+                </div>
+
+                <button
+                    id="restart-test"
+                    onclick="restartTest()"
+                >
+                    Start Again
+                </button>
+
+            </div>
 
         </div>
 
     </div>
 
 </div>
-```
 
-</div>
 
 <script>
 
@@ -1382,11 +1288,25 @@ let attemptedAnswers = 0;
 
 let shuffledPlants = [];
 
+/*
+ * Queue contains plants that still need answering.
+ */
+
 let plantQueue = [];
 
 let incorrectPlants = [];
 
+/*
+ * Whether the currently displayed plant has been
+ * answered.
+ */
+
 let currentPlantAnswered = false;
+
+
+/*
+ * Native / Introduced button selection.
+ */
 
 let selectedStatus = "";
 
@@ -1435,53 +1355,32 @@ function selectStatus(status) {
     selectedStatus = status;
 
 
-    document.getElementById(
-        "native-button"
-    ).classList.remove("selected");
+    document
+        .getElementById("native-button")
+        .classList.remove("selected");
 
 
-    document.getElementById(
-        "introduced-button"
-    ).classList.remove("selected");
+    document
+        .getElementById("introduced-button")
+        .classList.remove("selected");
 
 
     if (status === "Native") {
 
-        document.getElementById(
-            "native-button"
-        ).classList.add("selected");
+        document
+            .getElementById("native-button")
+            .classList.add("selected");
 
     }
 
 
     if (status === "Introduced") {
 
-        document.getElementById(
-            "introduced-button"
-        ).classList.add("selected");
+        document
+            .getElementById("introduced-button")
+            .classList.add("selected");
 
     }
-
-}
-
-
-/* =====================================================
-CLEAR STATUS SELECTION
-===================================================== */
-
-function clearStatusSelection() {
-
-    selectedStatus = "";
-
-
-    document.getElementById(
-        "native-button"
-    ).classList.remove("selected");
-
-
-    document.getElementById(
-        "introduced-button"
-    ).classList.remove("selected");
 
 }
 
@@ -1588,8 +1487,7 @@ function submitAnswer() {
         .trim();
 
 
-    const userStatus =
-        selectedStatus;
+    const userStatus = selectedStatus;
 
 
     const plant =
@@ -1849,6 +1747,11 @@ function submitAnswer() {
     }
 
 
+    /*
+     * After removing the answered plant, the same
+     * index now points to the next plant.
+     */
+
     if (
         currentPlant >=
         plantQueue.length
@@ -1970,6 +1873,12 @@ function nextPlant() {
     }
 
 
+    /*
+     * CURRENT PLANT HAS NOT BEEN ANSWERED
+     *
+     * Move it to the END of the queue.
+     */
+
     if (!currentPlantAnswered) {
 
         const skippedPlant =
@@ -1986,12 +1895,22 @@ function nextPlant() {
     }
 
 
+    /*
+     * CURRENT PLANT HAS BEEN ANSWERED
+     *
+     * It was already removed by submitAnswer().
+     */
+
     if (currentPlant >= plantQueue.length) {
 
         currentPlant = 0;
 
     }
 
+
+    /*
+     * Reset state for the new plant.
+     */
 
     currentPlantAnswered = false;
 
@@ -2007,7 +1926,17 @@ function nextPlant() {
     ).value = "";
 
 
-    clearStatusSelection();
+    selectedStatus = "";
+
+
+    document
+        .getElementById("native-button")
+        .classList.remove("selected");
+
+
+    document
+        .getElementById("introduced-button")
+        .classList.remove("selected");
 
 
     /* =================================================
@@ -2114,7 +2043,14 @@ function restartTest() {
     ).value = "";
 
 
-    clearStatusSelection();
+    document
+        .getElementById("native-button")
+        .classList.remove("selected");
+
+
+    document
+        .getElementById("introduced-button")
+        .classList.remove("selected");
 
 
     /* =================================================
@@ -2131,11 +2067,6 @@ START TEST
 ===================================================== */
 
 restartTest();
-
-
-/* =====================================================
-SERVICE WORKER
-===================================================== */
 
 if ("serviceWorker" in navigator) {
 
