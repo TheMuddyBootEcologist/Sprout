@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -805,6 +806,7 @@ TABLET / MOBILE
 
     }
 
+
 }
 
 
@@ -1081,14 +1083,14 @@ MAIN TRAINER
 
             <!-- =================================================
                  RESULT
-            ================================================== -->
+            ================================================= -->
 
             <div id="result"></div>
 
 
             <!-- =================================================
                  PLANT INFORMATION
-            ================================================== -->
+            ================================================= -->
 
             <div id="plant-information"></div>
 
@@ -1462,17 +1464,26 @@ function previousPhoto() {
 MOBILE SCROLL CONTROL
 ===================================================== */
 
+let scrollSnapTimeout;
+
 window.addEventListener("scroll", function() {
 
     if (
         window.innerWidth <= 600 &&
-        !currentPlantAnswered
+        !currentPlantAnswered &&
+        window.scrollY > 0
     ) {
 
-        window.scrollTo(
-            0,
-            0
-        );
+        clearTimeout(scrollSnapTimeout);
+
+        scrollSnapTimeout = setTimeout(function() {
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }, 50);
 
     }
 
@@ -1929,10 +1940,10 @@ function nextPlant() {
 
     currentPlantAnswered = false;
 
-    window.scrollTo(
-        0,
-        0
-    );
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
     currentPhoto = 0;
 
@@ -2007,10 +2018,10 @@ function restartTest() {
 
     currentPlantAnswered = false;
 
-    window.scrollTo(
-        0,
-        0
-    );
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
     selectedStatus = "";
 
@@ -2110,3 +2121,4 @@ if ("serviceWorker" in navigator) {
 </body>
 
 </html>
+```
