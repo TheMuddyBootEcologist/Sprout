@@ -32,17 +32,20 @@ GENERAL PAGE
     box-sizing: border-box;
 }
 
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 body {
 
     font-family: Arial, sans-serif;
 
     background-color: #f2f2f2;
 
-    margin: 0;
-
     min-height: 100vh;
-
-    overflow-x: hidden;
 
 }
 
@@ -75,6 +78,8 @@ PROGRESS
 
     z-index: 100;
 
+    overflow: hidden;
+
 }
 
 #score-number {
@@ -86,6 +91,10 @@ PROGRESS
     color: #2e7d32;
 
     margin-bottom: 5px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
 
 }
 
@@ -141,6 +150,8 @@ PHOTO SECTION
 
     width: 100%;
 
+    overflow: hidden;
+
 }
 
 
@@ -184,6 +195,8 @@ PHOTO NAVIGATION
     gap: 20px;
 
     height: 50px;
+
+    overflow: hidden;
 
 }
 
@@ -230,6 +243,12 @@ PHOTO ARROWS
         background-color 0.2s ease,
         transform 0.2s ease;
 
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    overflow: hidden;
+
 }
 
 .photo-arrow:hover {
@@ -261,6 +280,10 @@ PHOTO NUMBER
 
     color: #333;
 
+    overflow: hidden;
+
+    white-space: nowrap;
+
 }
 
 
@@ -273,6 +296,8 @@ ANSWER SECTION
     width: 100%;
 
     position: relative;
+
+    overflow: hidden;
 
 }
 
@@ -340,6 +365,14 @@ NATIVE / INTRODUCED BUTTONS
         background-color 0.2s ease,
         color 0.2s ease,
         border-color 0.2s ease;
+
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    overflow: hidden;
+
+    white-space: nowrap;
 
 }
 
@@ -411,6 +444,12 @@ SUBMIT BUTTON
 
     white-space: nowrap;
 
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    overflow: hidden;
+
 }
 
 #submit-answer:hover {
@@ -454,6 +493,12 @@ NEXT PLANT BUTTON
 
     display: block;
 
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    overflow: hidden;
+
 }
 
 #next-plant:hover {
@@ -490,6 +535,8 @@ RESULT
     text-align: left;
 
     display: none;
+
+    overflow: hidden;
 
 }
 
@@ -528,6 +575,8 @@ PLANT INFORMATION
 
     display: none;
 
+    overflow: hidden;
+
 }
 
 #plant-information h2 {
@@ -556,6 +605,8 @@ RIGHT COLUMN
     flex-direction: column;
 
     align-items: stretch;
+
+    overflow: hidden;
 
 }
 
@@ -639,6 +690,8 @@ TEST COMPLETE
 
     text-align: center;
 
+    overflow: hidden;
+
 }
 
 #test-complete h2 {
@@ -681,6 +734,12 @@ RESTART BUTTON
     background-color: #1976d2;
 
     color: white;
+
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    overflow: hidden;
 
 }
 
@@ -1323,25 +1382,11 @@ let attemptedAnswers = 0;
 
 let shuffledPlants = [];
 
-/*
- * Queue contains plants that still need answering.
- */
-
 let plantQueue = [];
 
 let incorrectPlants = [];
 
-/*
- * Whether the currently displayed plant has been
- * answered.
- */
-
 let currentPlantAnswered = false;
-
-
-/*
- * Currently selected Native / Introduced answer.
- */
 
 let selectedStatus = "";
 
@@ -1390,22 +1435,15 @@ function selectStatus(status) {
     selectedStatus = status;
 
 
-    /*
-     * Remove selected appearance from both buttons.
-     */
-
     document.getElementById(
         "native-button"
     ).classList.remove("selected");
+
 
     document.getElementById(
         "introduced-button"
     ).classList.remove("selected");
 
-
-    /*
-     * Highlight the selected button.
-     */
 
     if (status === "Native") {
 
@@ -1552,28 +1590,6 @@ function submitAnswer() {
 
     const userStatus =
         selectedStatus;
-
-
-    /*
-     * Require both fields to be answered.
-     */
-
-    if (userName === "" || userStatus === "") {
-
-        const result =
-            document.getElementById("result");
-
-        result.innerHTML =
-
-            '<div class="incorrect">' +
-            'Please enter a plant name and select Native or Introduced.' +
-            '</div>';
-
-        result.style.display = "block";
-
-        return;
-
-    }
 
 
     const plant =
@@ -1833,11 +1849,6 @@ function submitAnswer() {
     }
 
 
-    /*
-     * After removing the answered plant, the same
-     * index now points to the next plant.
-     */
-
     if (
         currentPlant >=
         plantQueue.length
@@ -1959,12 +1970,6 @@ function nextPlant() {
     }
 
 
-    /*
-     * CURRENT PLANT HAS NOT BEEN ANSWERED
-     *
-     * Move it to the END of the queue.
-     */
-
     if (!currentPlantAnswered) {
 
         const skippedPlant =
@@ -1981,22 +1986,12 @@ function nextPlant() {
     }
 
 
-    /*
-     * CURRENT PLANT HAS BEEN ANSWERED
-     *
-     * It was already removed by submitAnswer().
-     */
-
     if (currentPlant >= plantQueue.length) {
 
         currentPlant = 0;
 
     }
 
-
-    /*
-     * Reset state for the new plant.
-     */
 
     currentPlantAnswered = false;
 
@@ -2159,4 +2154,3 @@ if ("serviceWorker" in navigator) {
 </body>
 
 </html>
-
