@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -48,70 +47,44 @@ body {
 
 
 /* =====================================================
-PROGRESS BAR
+PROGRESS
 ===================================================== */
 
-#progress-container {
+#score {
 
-    position: relative;
+    position: fixed;
 
-    width: 100%;
+    left: 30px;
 
-    height: 42px;
+    top: 30px;
 
-    background-color: #d9d9d9;
+    width: 150px;
 
-    border-radius: 10px 10px 0 0;
+    background-color: white;
 
-    overflow: hidden;
+    padding: 20px;
 
-    z-index: 10;
+    border-radius: 10px;
 
-}
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 
-#progress-fill {
+    text-align: center;
 
-    position: absolute;
+    font-size: 18px;
 
-    left: 0;
-
-    top: 0;
-
-    height: 100%;
-
-    width: 0%;
-
-    background-color: #2e7d32;
-
-    transition: width 0.35s ease;
+    z-index: 100;
 
 }
 
-#progress-number {
+#score-number {
 
-    position: absolute;
-
-    left: 0;
-
-    top: 0;
-
-    width: 100%;
-
-    height: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    color: #333;
-
-    font-size: 17px;
+    font-size: 22px;
 
     font-weight: bold;
 
-    z-index: 2;
+    color: #2e7d32;
+
+    margin-bottom: 5px;
 
 }
 
@@ -171,23 +144,6 @@ PHOTO SECTION
 
 
 /* =====================================================
-PLANT IMAGE CONTAINER
-===================================================== */
-
-.photo-image-container {
-
-    width: 100%;
-
-    background-color: white;
-
-    border-radius: 10px;
-
-    overflow: hidden;
-
-}
-
-
-/* =====================================================
 PLANT IMAGE
 ===================================================== */
 
@@ -195,11 +151,13 @@ PLANT IMAGE
 
     width: 100%;
 
-    height: 858px;
+    height: 900px;
 
     object-fit: cover;
 
     background-color: white;
+
+    border-radius: 10px;
 
     display: block;
 
@@ -795,6 +753,16 @@ TABLET / MOBILE
 
 @media (max-width: 1100px) {
 
+    #score {
+
+        position: static;
+
+        width: 150px;
+
+        margin: 15px auto;
+
+    }
+
     body {
 
         display: flex;
@@ -837,6 +805,7 @@ TABLET / MOBILE
 
     }
 
+
 }
 
 
@@ -847,94 +816,52 @@ MOBILE
 @media (max-width: 600px) {
 
     .trainer {
-
         width: 94%;
-
         padding: 10px 0 100px 0;
-
     }
 
-
-    /* ================================================
-       MOBILE PROGRESS BAR
-       ================================================ */
-
-    #progress-container {
-
-        height: 38px;
-
-        border-radius: 8px 8px 0 0;
-
+    #score {
+        margin: 10px auto 15px auto;
+        padding: 12px;
+        width: 140px;
+        font-size: 16px;
     }
 
-    #progress-number {
-
-        font-size: 15px;
-
+    #score-number {
+        font-size: 20px;
     }
-
-
-    /* ================================================
-       MOBILE PLANT IMAGE
-       ================================================ */
 
     #plant-image {
-
-        height: 252px;
-
+        height: 290px;
         object-fit: cover;
-
-    }
-
-    .photo-image-container {
-
         border-radius: 8px;
-
     }
-
 
     .photo-controls {
-
         margin-top: 8px;
-
         height: 42px;
-
         gap: 10px;
-
     }
 
     .photo-arrow {
-
         width: 40px;
-
         height: 40px;
-
         font-size: 32px;
-
     }
 
     #photo-number {
-
         font-size: 15px;
-
         min-width: 45px;
-
     }
 
     #plant-name {
-
         padding: 13px;
-
         font-size: 17px;
-
     }
 
     .status-button {
-
         padding: 13px;
-
         font-size: 17px;
-
     }
 
 
@@ -1015,7 +942,24 @@ MOBILE
 
 </head>
 
+
 <body>
+
+
+<!-- =====================================================
+PROGRESS
+===================================================== -->
+
+<div id="score">
+
+    <div id="score-number">
+
+        Answered: 0 / 0
+
+    </div>
+
+</div>
+
 
 <!-- =====================================================
 MAIN TRAINER
@@ -1023,36 +967,14 @@ MAIN TRAINER
 
 <div class="trainer">
 
-```
-<div class="main-content">
+    <div class="main-content">
 
 
-    <!-- =================================================
-         LEFT: PHOTO
-    ================================================== -->
+        <!-- =================================================
+             LEFT: PHOTO
+        ================================================== -->
 
-    <div class="photo-section">
-
-        <div class="photo-image-container">
-
-            <!-- =========================================
-                 PROGRESS BAR
-            ========================================== -->
-
-            <div id="progress-container">
-
-                <div id="progress-fill"></div>
-
-                <div id="progress-number">
-                    0 / 0
-                </div>
-
-            </div>
-
-
-            <!-- =========================================
-                 PLANT IMAGE
-            ========================================== -->
+        <div class="photo-section">
 
             <img
                 id="plant-image"
@@ -1060,165 +982,162 @@ MAIN TRAINER
                 alt="Plant"
             >
 
-        </div>
+            <div class="photo-controls">
 
+                <button
+                    type="button"
+                    class="photo-arrow"
+                    onclick="previousPhoto()"
+                    aria-label="Previous photo"
+                    title="Previous photo"
+                >
+                    ‹
+                </button>
 
-        <div class="photo-controls">
+                <span id="photo-number">
+                    1 / 1
+                </span>
 
-            <button
-                type="button"
-                class="photo-arrow"
-                onclick="previousPhoto()"
-                aria-label="Previous photo"
-                title="Previous photo"
-            >
-                ‹
-            </button>
+                <button
+                    type="button"
+                    class="photo-arrow"
+                    onclick="nextPhoto()"
+                    aria-label="Next photo"
+                    title="Next photo"
+                >
+                    ›
+                </button>
 
-            <span id="photo-number">
-                1 / 1
-            </span>
-
-            <button
-                type="button"
-                class="photo-arrow"
-                onclick="nextPhoto()"
-                aria-label="Next photo"
-                title="Next photo"
-            >
-                ›
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- =================================================
-         MIDDLE: ANSWER
-    ================================================== -->
-
-    <div class="answer-section">
-
-        <input
-            type="text"
-            id="plant-name"
-            placeholder="Scientific or common name"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-        >
-
-
-        <!-- =================================================
-             NATIVE / INTRODUCED
-        ================================================== -->
-
-        <div class="status-buttons">
-
-            <button
-                type="button"
-                id="native-button"
-                class="status-button"
-                onclick="selectStatus('Native')"
-            >
-                Native
-            </button>
-
-            <button
-                type="button"
-                id="introduced-button"
-                class="status-button"
-                onclick="selectStatus('Introduced')"
-            >
-                Introduced
-            </button>
-
-        </div>
-
-
-        <!-- =================================================
-             BOTH BUTTONS ARE ALWAYS VISIBLE
-        ================================================= -->
-
-        <div class="answer-buttons">
-
-            <button
-                id="submit-answer"
-                onclick="submitAnswer()"
-            >
-                Submit Answer
-            </button>
-
-            <button
-                id="next-plant"
-                onclick="nextPlant()"
-            >
-                Next Plant →
-            </button
-
-        </div>
-
-
-        <!-- =================================================
-             RESULT
-        ================================================= -->
-
-        <div id="result"></div>
-
-
-        <!-- =================================================
-             PLANT INFORMATION
-        ================================================= -->
-
-        <div id="plant-information"></div>
-
-    </div>
-
-
-    <!-- =================================================
-         RIGHT: REVIEW + TEST COMPLETE
-    ================================================== -->
-
-    <div class="right-column">
-
-
-        <div
-            id="review-section"
-            class="review-section"
-        >
-
-            <div id="incorrect-plants"></div>
-
-        </div>
-
-
-        <div id="test-complete">
-
-            <h2>
-                Daily Test Complete
-            </h2>
-
-            <div id="final-score">
-                Score: 0 / 0
             </div>
 
-            <button
-                id="restart-test"
-                onclick="restartTest()"
+        </div>
+
+
+        <!-- =================================================
+             MIDDLE: ANSWER
+        ================================================== -->
+
+        <div class="answer-section">
+
+            <input
+                type="text"
+                id="plant-name"
+                placeholder="Scientific or common name"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
             >
-                Start Again
-            </button>
+
+
+            <!-- =================================================
+                 NATIVE / INTRODUCED
+            ================================================== -->
+
+            <div class="status-buttons">
+
+                <button
+                    type="button"
+                    id="native-button"
+                    class="status-button"
+                    onclick="selectStatus('Native')"
+                >
+                    Native
+                </button>
+
+                <button
+                    type="button"
+                    id="introduced-button"
+                    class="status-button"
+                    onclick="selectStatus('Introduced')"
+                >
+                    Introduced
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 BOTH BUTTONS ARE ALWAYS VISIBLE
+            ================================================= -->
+
+            <div class="answer-buttons">
+
+                <button
+                    id="submit-answer"
+                    onclick="submitAnswer()"
+                >
+                    Submit Answer
+                </button>
+
+                <button
+                    id="next-plant"
+                    onclick="nextPlant()"
+                >
+                    Next Plant →
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 RESULT
+            ================================================= -->
+
+            <div id="result"></div>
+
+
+            <!-- =================================================
+                 PLANT INFORMATION
+            ================================================= -->
+
+            <div id="plant-information"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT: REVIEW + TEST COMPLETE
+        ================================================== -->
+
+        <div class="right-column">
+
+
+            <div
+                id="review-section"
+                class="review-section"
+            >
+
+                <div id="incorrect-plants"></div>
+
+            </div>
+
+
+            <div id="test-complete">
+
+                <h2>
+                    Daily Test Complete
+                </h2>
+
+                <div id="final-score">
+                    Score: 0 / 0
+                </div>
+
+                <button
+                    id="restart-test"
+                    onclick="restartTest()"
+                >
+                    Start Again
+                </button>
+
+            </div>
 
         </div>
 
     </div>
 
 </div>
-```
 
-</div>
 
 <script>
 
@@ -1588,6 +1507,12 @@ window.addEventListener("scroll", function() {
 
         scrollSnapTimeout = setTimeout(function() {
 
+            /*
+             * Check again before snapping.
+             * The user may have tapped the name field
+             * while the timeout was waiting.
+             */
+
             if (
                 currentPlantAnswered ||
                 isTypingPlantName ||
@@ -1875,9 +1800,6 @@ function submitAnswer() {
 
     if (plantQueue.length === 0) {
 
-        updateScore();
-
-
         document.getElementById(
             "test-complete"
         ).style.display = "block";
@@ -1934,35 +1856,14 @@ UPDATE PROGRESS
 
 function updateScore() {
 
-    const progressNumber =
-        document.getElementById(
-            "progress-number"
-        );
+    document.getElementById(
+        "score-number"
+    ).textContent =
 
-    const progressFill =
-        document.getElementById(
-            "progress-fill"
-        );
-
-
-    progressNumber.textContent =
-
+        "Answered: " +
         attemptedAnswers +
         " / " +
         plants.length;
-
-
-    const percentage =
-
-        plants.length > 0
-
-            ? (attemptedAnswers / plants.length) * 100
-
-            : 0;
-
-
-    progressFill.style.width =
-        percentage + "%";
 
 }
 
