@@ -1059,7 +1059,7 @@ MAIN TRAINER
 
             <!-- =================================================
                  BOTH BUTTONS ARE ALWAYS VISIBLE
-            ================================================== -->
+            ================================================= -->
 
             <div class="answer-buttons">
 
@@ -1467,6 +1467,31 @@ let scrollSnapTimeout;
 
 let isSnappingToTop = false;
 
+let isTypingPlantName = false;
+
+
+/*
+ * Allow the input field to open the keyboard without
+ * the scroll-lock fighting against the iPhone.
+ */
+
+const plantNameInput =
+    document.getElementById("plant-name");
+
+
+plantNameInput.addEventListener("focus", function() {
+
+    isTypingPlantName = true;
+
+});
+
+
+plantNameInput.addEventListener("blur", function() {
+
+    isTypingPlantName = false;
+
+});
+
 
 window.addEventListener("scroll", function() {
 
@@ -1474,12 +1499,28 @@ window.addEventListener("scroll", function() {
         window.innerWidth <= 600 &&
         !currentPlantAnswered &&
         !isSnappingToTop &&
+        !isTypingPlantName &&
         window.scrollY > 0
     ) {
 
         clearTimeout(scrollSnapTimeout);
 
         scrollSnapTimeout = setTimeout(function() {
+
+            /*
+             * Check again before snapping.
+             * The user may have tapped the name field
+             * while the timeout was waiting.
+             */
+
+            if (
+                currentPlantAnswered ||
+                isTypingPlantName ||
+                isSnappingToTop
+            ) {
+                return;
+            }
+
 
             isSnappingToTop = true;
 
@@ -1489,10 +1530,6 @@ window.addEventListener("scroll", function() {
                 behavior: "smooth"
             });
 
-            /*
-             * Force the document to the absolute
-             * top after the smooth scroll finishes.
-             */
 
             setTimeout(function() {
 
@@ -1963,6 +2000,8 @@ function nextPlant() {
 
     currentPlantAnswered = false;
 
+    isTypingPlantName = false;
+
 
     isSnappingToTop = true;
 
@@ -2057,6 +2096,8 @@ function restartTest() {
     currentPhoto = 0;
 
     currentPlantAnswered = false;
+
+    isTypingPlantName = false;
 
 
     isSnappingToTop = true;
