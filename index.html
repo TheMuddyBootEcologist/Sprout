@@ -701,6 +701,55 @@ RESTART BUTTON
 
 
 /* =====================================================
+FINAL SCORE IN ANSWER BAR
+===================================================== */
+
+.answer-buttons.test-complete-buttons {
+
+    grid-template-columns: 1fr;
+
+}
+
+.answer-buttons.test-complete-buttons #final-score-mobile {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    color: #2e7d32;
+
+    text-align: center;
+
+}
+
+.answer-buttons.test-complete-buttons #restart-test-mobile {
+
+    width: 100%;
+
+    padding: 12px 30px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #1976d2;
+
+    color: white;
+
+}
+
+.answer-buttons.test-complete-buttons #restart-test-mobile:hover {
+
+    background-color: #125ca3;
+
+}
+
+
+/* =====================================================
 MEDIUM SCREENS
 ===================================================== */
 
@@ -873,30 +922,30 @@ MOBILE
        ================================================ */
 
     .answer-buttons {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
 
-    padding: 40px 12px;
+        padding: 40px 12px;
 
-    padding-bottom: calc(
-        40px + env(safe-area-inset-bottom, 0px)
-    );
+        padding-bottom: calc(
+            40px + env(safe-area-inset-bottom, 0px)
+        );
 
-    background-color: white;
+        background-color: white;
 
-    box-shadow:
-        0 -2px 10px
-        rgba(0, 0, 0, 0.15);
+        box-shadow:
+            0 -2px 10px
+            rgba(0, 0, 0, 0.15);
 
-    align-items: center;
-}
+        align-items: center;
+    }
 
     #submit-answer,
     #next-plant {
@@ -1789,7 +1838,7 @@ function submitAnswer() {
 
         document.getElementById(
             "test-complete"
-        ).style.display = "block";
+        ).style.display = "none";
 
 
         document.getElementById(
@@ -1805,14 +1854,36 @@ function submitAnswer() {
         showIncorrectPlants();
 
 
-        document.getElementById(
-            "submit-answer"
-        ).disabled = true;
+        const finalScore =
+            "Score: " +
+            correctAnswers +
+            " / " +
+            attemptedAnswers;
 
 
-        document.getElementById(
-            "next-plant"
-        ).disabled = true;
+        const answerButtons =
+            document.querySelector(
+                ".answer-buttons"
+            );
+
+
+        answerButtons.classList.add(
+            "test-complete-buttons"
+        );
+
+
+        answerButtons.innerHTML =
+
+            '<div id="final-score-mobile">' +
+                finalScore +
+            '</div>' +
+
+            '<button ' +
+                'id="restart-test-mobile" ' +
+                'onclick="restartTest()"' +
+            '>' +
+                'Start Again' +
+            '</button>';
 
 
         return;
@@ -2085,6 +2156,34 @@ RESTART TEST
 ===================================================== */
 
 function restartTest() {
+
+    const answerButtons =
+        document.querySelector(
+            ".answer-buttons"
+        );
+
+
+    answerButtons.classList.remove(
+        "test-complete-buttons"
+    );
+
+
+    answerButtons.innerHTML =
+
+        '<button ' +
+            'id="submit-answer" ' +
+            'onclick="submitAnswer()"' +
+        '>' +
+            'Submit Answer' +
+        '</button>' +
+
+        '<button ' +
+            'id="next-plant" ' +
+            'onclick="nextPlant()"' +
+        '>' +
+            'Next Plant →' +
+        '</button>';
+
 
     correctAnswers = 0;
 
