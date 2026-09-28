@@ -1191,6 +1191,8 @@ const plants = [
         commonName: "Common Lantana",
         status: "Introduced",
         family: "Verbenaceae - Verbena Family",
+        familyCharacteristics: "",
+        identifyingFeatures: "",
 
         photos: [
             "plants/Lantana camara - Common Lantana/photo1.jpg",
@@ -1208,6 +1210,8 @@ const plants = [
         commonName: "Blue Flax-Lily",
         status: "Native",
         family: "Asphodelaceae - Aloe Family",
+        familyCharacteristics: "",
+        identifyingFeatures: "",
 
         photos: [
             "plants/Dianella caerulea - Blue Flax-Lily/photo1.jpg",
@@ -1225,6 +1229,8 @@ const plants = [
         commonName: "Blue Trumpet",
         status: "Native",
         family: "Acanthaceae - Acanthus Family",
+        familyCharacteristics: "",
+        identifyingFeatures: "",
 
         photos: [
             "plants/Brunoniella australis - Blue Trumpet/photo1.jpg",
@@ -1242,6 +1248,8 @@ const plants = [
         commonName: "Coffee Bush",
         status: "Native",
         family: "Phyllanthaceae Leaf-flower Family",
+        familyCharacteristics: "",
+        identifyingFeatures: "",
 
         photos: [
             "plants/Breynia oblongifolia - Coffee Bush/photo1.jpg",
@@ -1259,6 +1267,8 @@ const plants = [
         commonName: "Bull Thistle",
         status: "Introduced",
         family: "Asteraceae - Sunflowers, Daisies, Asters, and Allies",
+        familyCharacteristics: "",
+        identifyingFeatures: "",
 
         photos: [
             "plants/Cirsium vulgare - Bull Thistle/photo1.jpg",
@@ -1276,6 +1286,8 @@ const plants = [
         commonName: "Sieber's Parrot-Pea",
         status: "Native",
         family: "Fabaceae - Legumes",
+        familyCharacteristics: "",
+        identifyingFeatures: "",
 
         photos: [
             "plants/Dillwynia sieberi - Sieber's Parrot-Pea/photo1.jpg",
@@ -1293,6 +1305,8 @@ const plants = [
         commonName: "Fairy Stonecrop",
         status: "Introduced",
         family: "Crassulaceae - Stonecrop Family",
+        familyCharacteristics: "",
+        identifyingFeatures: "",
 
         photos: [
             "plants/Crassula multicava - Fairy Stonecrop/photo1.jpg",
@@ -1812,19 +1826,22 @@ function submitAnswer() {
         "<p>" +
         "<strong>Status:</strong> " +
         plant.status +
+        "</p>" +
+
+        "<p>" +
+        "<strong>Family:</strong> " +
+        plant.family +
+        "</p>" +
+
+        "<p>" +
+        "<strong>Family characteristics:</strong> " +
+        plant.familyCharacteristics +
+        "</p>" +
+
+        "<p>" +
+        "<strong>Identifying features:</strong> " +
+        plant.identifyingFeatures +
         "</p>";
-
-
-    if (plant.family) {
-
-        informationHTML +=
-
-            "<p>" +
-            "<strong>Family:</strong> " +
-            plant.family +
-            "</p>";
-
-    }
 
 
     if (plant.information) {
