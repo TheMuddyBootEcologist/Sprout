@@ -1336,6 +1336,18 @@ let incorrectPlants = [];
 
 let currentPlantAnswered = false;
 
+/*
+ * Keeps track of the plant currently displayed in
+ * the photo section.
+ *
+ * This is separate from plantQueue because answered
+ * plants are removed from the queue but should remain
+ * available for photo navigation until the user moves
+ * to the next plant.
+ */
+
+let displayedPlant = null;
+
 
 /*
  * Native / Introduced button selection.
@@ -1424,17 +1436,21 @@ SHOW PHOTO
 
 function showPhoto() {
 
-    if (plantQueue.length === 0) {
+    /*
+     * Use the plant currently displayed rather than
+     * the plant currently occupying the queue index.
+     *
+     * This allows answered plants to remain browsable.
+     */
+
+    if (!displayedPlant) {
         return;
     }
-
-    const plant =
-        plantQueue[currentPlant];
 
     document.getElementById(
         "plant-image"
     ).src =
-        plant.photos[currentPhoto];
+        displayedPlant.photos[currentPhoto];
 
     document.getElementById(
         "photo-number"
@@ -1442,7 +1458,7 @@ function showPhoto() {
 
         (currentPhoto + 1) +
         " / " +
-        plant.photos.length;
+        displayedPlant.photos.length;
 
 }
 
@@ -1453,7 +1469,7 @@ NEXT PHOTO
 
 function nextPhoto() {
 
-    if (plantQueue.length === 0) {
+    if (!displayedPlant) {
         return;
     }
 
@@ -1461,7 +1477,7 @@ function nextPhoto() {
 
     if (
         currentPhoto >=
-        plantQueue[currentPlant].photos.length
+        displayedPlant.photos.length
     ) {
 
         currentPhoto = 0;
@@ -1479,7 +1495,7 @@ PREVIOUS PHOTO
 
 function previousPhoto() {
 
-    if (plantQueue.length === 0) {
+    if (!displayedPlant) {
         return;
     }
 
@@ -1488,7 +1504,7 @@ function previousPhoto() {
     if (currentPhoto < 0) {
 
         currentPhoto =
-            plantQueue[currentPlant].photos.length - 1;
+            displayedPlant.photos.length - 1;
 
     }
 
@@ -1616,6 +1632,14 @@ function submitAnswer() {
 
     const plant =
         plantQueue[currentPlant];
+
+
+    /*
+     * Keep this plant available for photo navigation
+     * after it is removed from the quiz queue.
+     */
+
+    displayedPlant = plant;
 
 
     const enteredName =
@@ -2069,6 +2093,15 @@ function nextPlant() {
 
 
     /*
+     * The next plant in the queue is now the plant
+     * being displayed.
+     */
+
+    displayedPlant =
+        plantQueue[currentPlant];
+
+
+    /*
      * Reset state for the new plant.
      */
 
@@ -2201,6 +2234,8 @@ function restartTest() {
 
     isTypingPlantName = false;
 
+    displayedPlant = null;
+
 
     isSnappingToTop = true;
 
@@ -2227,6 +2262,15 @@ function restartTest() {
 
 
     shufflePlants();
+
+
+    /*
+     * Set the first shuffled plant as the plant
+     * currently displayed in the photo section.
+     */
+
+    displayedPlant =
+        plantQueue[currentPlant];
 
 
     updateScore();
