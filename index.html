@@ -1708,6 +1708,38 @@ let isSnappingToTop = false;
 
 let isTypingPlantName = false;
 
+let isZooming = false;
+
+
+/*
+ * Detect pinch-to-zoom on mobile so the scroll-lock
+ * does not interfere with zooming or panning the image.
+ */
+
+document.addEventListener("touchstart", function(event) {
+
+    if (
+        window.innerWidth <= 600 &&
+        event.touches.length > 1
+    ) {
+
+        isZooming = true;
+
+    }
+
+});
+
+
+document.addEventListener("touchend", function() {
+
+    setTimeout(function() {
+
+        isZooming = false;
+
+    }, 300);
+
+});
+
 
 /*
  * Allow the input field to open the keyboard without
@@ -1739,6 +1771,7 @@ window.addEventListener("scroll", function() {
         !currentPlantAnswered &&
         !isSnappingToTop &&
         !isTypingPlantName &&
+        !isZooming &&
         window.scrollY > 0
     ) {
 
@@ -1749,13 +1782,14 @@ window.addEventListener("scroll", function() {
             /*
              * Check again before snapping.
              * The user may have tapped the name field
-             * while the timeout was waiting.
+             * or started zooming while the timeout was waiting.
              */
 
             if (
                 currentPlantAnswered ||
                 isTypingPlantName ||
-                isSnappingToTop
+                isSnappingToTop ||
+                isZooming
             ) {
                 return;
             }
@@ -1772,11 +1806,20 @@ window.addEventListener("scroll", function() {
 
             setTimeout(function() {
 
-                window.scrollTo(0, 0);
+                /*
+                 * Do not force the page back to the top
+                 * if the user has started zooming.
+                 */
 
-                document.documentElement.scrollTop = 0;
+                if (!isZooming) {
 
-                document.body.scrollTop = 0;
+                    window.scrollTo(0, 0);
+
+                    document.documentElement.scrollTop = 0;
+
+                    document.body.scrollTop = 0;
+
+                }
 
                 isSnappingToTop = false;
 
