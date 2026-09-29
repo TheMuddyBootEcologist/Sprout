@@ -1708,37 +1708,28 @@ let isSnappingToTop = false;
 
 let isTypingPlantName = false;
 
-let isZooming = false;
-
 
 /*
- * Detect pinch-to-zoom on mobile so the scroll-lock
- * does not interfere with zooming or panning the image.
+ * Check whether Safari is currently zoomed.
+ * When zoomed, the normal page scroll-lock is disabled
+ * so the user can freely pan in any direction.
  */
 
-document.addEventListener("touchstart", function(event) {
+function isPageZoomed() {
 
-    if (
-        window.innerWidth <= 600 &&
-        event.touches.length > 1
-    ) {
+    if (window.innerWidth > 600) {
+        return false;
+    }
 
-        isZooming = true;
+    if (window.visualViewport) {
+
+        return window.visualViewport.scale > 1.01;
 
     }
 
-});
+    return false;
 
-
-document.addEventListener("touchend", function() {
-
-    setTimeout(function() {
-
-        isZooming = false;
-
-    }, 300);
-
-});
+}
 
 
 /*
@@ -1766,12 +1757,26 @@ plantNameInput.addEventListener("blur", function() {
 
 window.addEventListener("scroll", function() {
 
+    /*
+     * If the page is zoomed, completely ignore the
+     * scroll event. Safari is allowed to pan freely
+     * in every direction, including diagonally.
+     */
+
+    if (isPageZoomed()) {
+
+        clearTimeout(scrollSnapTimeout);
+
+        return;
+
+    }
+
+
     if (
         window.innerWidth <= 600 &&
         !currentPlantAnswered &&
         !isSnappingToTop &&
         !isTypingPlantName &&
-        !isZooming &&
         window.scrollY > 0
     ) {
 
@@ -1781,15 +1786,13 @@ window.addEventListener("scroll", function() {
 
             /*
              * Check again before snapping.
-             * The user may have tapped the name field
-             * or started zooming while the timeout was waiting.
              */
 
             if (
                 currentPlantAnswered ||
                 isTypingPlantName ||
                 isSnappingToTop ||
-                isZooming
+                isPageZoomed()
             ) {
                 return;
             }
@@ -1807,11 +1810,11 @@ window.addEventListener("scroll", function() {
             setTimeout(function() {
 
                 /*
-                 * Do not force the page back to the top
-                 * if the user has started zooming.
+                 * Never force the page back to the top
+                 * if Safari has entered zoom mode.
                  */
 
-                if (!isZooming) {
+                if (!isPageZoomed()) {
 
                     window.scrollTo(0, 0);
 
