@@ -157,6 +157,21 @@ PHOTO SECTION
 
 
 /* =====================================================
+PLANT IMAGE CONTAINER
+===================================================== */
+
+.image-container {
+
+    width: 100%;
+
+    height: 900px;
+
+    position: relative;
+
+}
+
+
+/* =====================================================
 PLANT IMAGE
 ===================================================== */
 
@@ -164,7 +179,7 @@ PLANT IMAGE
 
     width: 100%;
 
-    height: 900px;
+    height: 100%;
 
     object-fit: cover;
 
@@ -173,6 +188,41 @@ PLANT IMAGE
     border-radius: 10px;
 
     display: block;
+
+}
+
+
+/* =====================================================
+PHOTO ATTRIBUTION
+===================================================== */
+
+#photo-attribution {
+
+    position: absolute;
+
+    bottom: 8px;
+
+    left: 8px;
+
+    max-width: calc(100% - 16px);
+
+    padding: 4px 7px;
+
+    background-color: rgba(0, 0, 0, 0.65);
+
+    color: white;
+
+    font-size: 11px;
+
+    line-height: 1.3;
+
+    text-align: left;
+
+    border-radius: 4px;
+
+    display: none;
+
+    z-index: 5;
 
 }
 
@@ -851,7 +901,7 @@ TABLET / MOBILE
 
     }
 
-    #plant-image {
+    .image-container {
 
         height: 500px;
 
@@ -862,7 +912,6 @@ TABLET / MOBILE
         max-height: none;
 
     }
-
 
 }
 
@@ -889,10 +938,34 @@ MOBILE
         font-size: 14px;
     }
 
-    #plant-image {
+    .image-container {
+
         height: 390px;
+
+    }
+
+    #plant-image {
+
+        height: 100%;
+
         object-fit: cover;
+
         border-radius: 8px;
+
+    }
+
+    #photo-attribution {
+
+        bottom: 6px;
+
+        left: 6px;
+
+        max-width: calc(100% - 12px);
+
+        font-size: 10px;
+
+        padding: 3px 5px;
+
     }
 
     .photo-controls {
@@ -1018,11 +1091,19 @@ MAIN TRAINER
 
             </div>
 
-            <img
-                id="plant-image"
-                src=""
-                alt="Plant"
-            >
+
+            <div class="image-container">
+
+                <img
+                    id="plant-image"
+                    src=""
+                    alt="Plant"
+                >
+
+                <div id="photo-attribution"></div>
+
+            </div>
+
 
             <div class="photo-controls">
 
@@ -1204,6 +1285,12 @@ const plants = [
             "plants/Lantana camara - Common Lantana/photo3.jpg"
         ],
 
+        attributions: [
+            "",
+            "",
+            ""
+        ],
+
         information:
             "Lantana camara (common lantana) is a species of flowering plant in the verbena family (Verbenaceae), native to the tropics of the Americas. It is a very adaptable species, which can inhabit a wide variety of ecosystems; once it has been introduced into a habitat it spreads rapidly; between 45ºN and 45ºS and less than 1,400 metres (4,600 feet) in altitude."
     },
@@ -1221,6 +1308,12 @@ const plants = [
             "plants/Dianella caerulea - Blue Flax-Lily/photo1.jpg",
             "plants/Dianella caerulea - Blue Flax-Lily/photo2.jpg",
             "plants/Dianella caerulea - Blue Flax-Lily/photo3.jpg"
+        ],
+
+        attributions: [
+            "",
+            "",
+            ""
         ],
 
         information:
@@ -1242,6 +1335,12 @@ const plants = [
             "plants/Brunoniella australis - Blue Trumpet/photo3.jpg"
         ],
 
+        attributions: [
+            "",
+            "",
+            ""
+        ],
+
         information:
             "Brunoniella australis, the blue trumpet or blue yam, is a plant native of Australia. A widespread herbaceous plant, found in moist areas of eucalyptus woodland and forest, particularly on sloping ground. It is a small plant between 2–30 cm (0.8–10 in) tall."
     },
@@ -1259,6 +1358,12 @@ const plants = [
             "plants/Breynia oblongifolia - Coffee Bush/photo1.jpg",
             "plants/Breynia oblongifolia - Coffee Bush/photo2.jpg",
             "plants/Breynia oblongifolia - Coffee Bush/photo3.jpg"
+        ],
+
+        attributions: [
+            "",
+            "",
+            ""
         ],
 
         information:
@@ -1280,6 +1385,12 @@ const plants = [
             "plants/Cirsium vulgare - Bull Thistle/photo3.jpg"
         ],
 
+        attributions: [
+            "",
+            "",
+            ""
+        ],
+
         information:
             "Cirsium vulgare, commonly known as spear thistle, bull thistle, or common thistle, is a species of the Asteraceae genus Cirsium, native throughout most of Europe, Western Asia (east to the Yenisei Valley), and northwestern Africa (Atlas Mountains). It is also naturalised in North America, Africa, and Australia and is an invasive weed in several regions. It is the national flower of Scotland."
     },
@@ -1299,6 +1410,12 @@ const plants = [
             "plants/Dillwynia sieberi - Sieber's Parrot-Pea/photo3.jpg"
         ],
 
+        attributions: [
+            "Matt M. - https://canberra.naturemapr.org/sightings/4233967",
+            "",
+            "Petra H. (xanthosia) - https://www.inaturalist.org/photos/566145876"
+        ],
+
         information:
             "Dillwynia sieberi, commonly known as Sieber's parrot-pea, is a species of flowering plant in the family Fabaceae and is endemic to eastern Australia. It is an erect shrub with rigid, needle-shaped, sharply-pointed leaves and yellow to yellow-orange flowers with reddish-brown markings."
     },
@@ -1316,6 +1433,12 @@ const plants = [
             "plants/Crassula multicava - Fairy Stonecrop/photo1.jpg",
             "plants/Crassula multicava - Fairy Stonecrop/photo2.jpg",
             "plants/Crassula multicava - Fairy Stonecrop/photo3.jpg"
+        ],
+
+        attributions: [
+            "",
+            "",
+            ""
         ],
 
         information:
@@ -1470,6 +1593,7 @@ function showPhoto() {
     ).src =
         displayedPlant.photos[currentPhoto];
 
+
     document.getElementById(
         "photo-number"
     ).textContent =
@@ -1477,6 +1601,44 @@ function showPhoto() {
         (currentPhoto + 1) +
         " / " +
         displayedPlant.photos.length;
+
+
+    /*
+     * Show attribution for the current photo when
+     * attribution text has been provided.
+     */
+
+    const attribution =
+        displayedPlant.attributions &&
+        displayedPlant.attributions[currentPhoto]
+            ? displayedPlant.attributions[currentPhoto]
+            : "";
+
+
+    const attributionElement =
+        document.getElementById(
+            "photo-attribution"
+        );
+
+
+    if (attribution) {
+
+        attributionElement.textContent =
+            attribution;
+
+        attributionElement.style.display =
+            "block";
+
+    }
+    else {
+
+        attributionElement.textContent =
+            "";
+
+        attributionElement.style.display =
+            "none";
+
+    }
 
 }
 
