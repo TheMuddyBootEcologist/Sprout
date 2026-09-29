@@ -1703,23 +1703,18 @@ MOBILE SCROLL CONTROL
 ===================================================== */
 
 let scrollSnapTimeout;
-
 let isSnappingToTop = false;
-
 let isTypingPlantName = false;
 
-let isPinching = false;
-
-let pinchEndTimeout;
+let isTwoFingerGesture = false;
+let twoFingerTimeout;
 
 
 /*
- * Detect when the user begins a two-finger
- * pinch gesture.
+ * Detect the beginning of a two-finger gesture.
  *
- * This does NOT change how Safari zooms the page.
- * It simply tells the scroll-lock to stay completely
- * out of the way while the user is zooming or panning.
+ * Safari handles the actual pinch zoom and page movement.
+ * We only prevent the quiz's scroll-lock from interfering.
  */
 
 document.addEventListener("touchstart", function(event) {
@@ -1729,11 +1724,10 @@ document.addEventListener("touchstart", function(event) {
         event.touches.length >= 2
     ) {
 
-        isPinching = true;
-
-        clearTimeout(pinchEndTimeout);
+        isTwoFingerGesture = true;
 
         clearTimeout(scrollSnapTimeout);
+        clearTimeout(twoFingerTimeout);
 
     }
 
@@ -1741,38 +1735,8 @@ document.addEventListener("touchstart", function(event) {
 
 
 /*
- * Keep the page in free-movement mode briefly after
- * the second finger is released.
- *
- * This is important because Safari can continue
- * adjusting the zoom/pan position immediately after
- * the pinch itself has finished.
- */
-
-document.addEventListener("touchend", function(event) {
-
-    if (
-        window.innerWidth <= 600 &&
-        isPinching &&
-        event.touches.length === 0
-    ) {
-
-        clearTimeout(pinchEndTimeout);
-
-        pinchEndTimeout = setTimeout(function() {
-
-            isPinching = false;
-
-        }, 500);
-
-    }
-
-}, { passive: true });
-
-
-/*
- * Also detect a two-finger gesture if another
- * touch event occurs during the interaction.
+ * Keep the scroll-lock disabled while two fingers
+ * are being used.
  */
 
 document.addEventListener("touchmove", function(event) {
@@ -1782,11 +1746,62 @@ document.addEventListener("touchmove", function(event) {
         event.touches.length >= 2
     ) {
 
-        isPinching = true;
-
-        clearTimeout(pinchEndTimeout);
+        isTwoFingerGesture = true;
 
         clearTimeout(scrollSnapTimeout);
+        clearTimeout(twoFingerTimeout);
+
+    }
+
+}, { passive: true });
+
+
+/*
+ * When the gesture ends, keep the scroll-lock disabled
+ * for a while.
+ *
+ * This is deliberately longer than the previous version.
+ * Safari may continue moving the zoomed viewport after
+ * the fingers have left the screen.
+ */
+
+document.addEventListener("touchend", function(event) {
+
+    if (
+        window.innerWidth <= 600 &&
+        isTwoFingerGesture &&
+        event.touches.length === 0
+    ) {
+
+        clearTimeout(twoFingerTimeout);
+
+        twoFingerTimeout = setTimeout(function() {
+
+            isTwoFingerGesture = false;
+
+        }, 2000);
+
+    }
+
+}, { passive: true });
+
+
+/*
+ * If the touch interaction is cancelled, also keep the
+ * scroll-lock disabled briefly.
+ */
+
+document.addEventListener("touchcancel", function() {
+
+    if (window.innerWidth <= 600) {
+
+        clearTimeout(twoFingerTimeout);
+
+        twoFingerTimeout = setTimeout(function() {
+
+            isTwoFingerGesture = false;
+
+        }, 2000);
 
     }
 
@@ -1816,17 +1831,20 @@ plantNameInput.addEventListener("blur", function() {
 });
 
 
+/*
+ * Mobile scroll-lock.
+ *
+ * IMPORTANT:
+ * When a two-finger gesture has occurred, this function
+ * does absolutely nothing.
+ *
+ * Safari is therefore allowed to zoom and move the
+ * ENTIRE webpage freely in every direction.
+ */
+
 window.addEventListener("scroll", function() {
 
-    /*
-     * If the user is pinch-zooming or has just finished
-     * pinch-zooming, completely ignore page scrolling.
-     *
-     * Safari is therefore free to move the entire
-     * zoomed webpage in ANY direction.
-     */
-
-    if (isPinching) {
+    if (isTwoFingerGesture) {
 
         clearTimeout(scrollSnapTimeout);
 
@@ -1845,21 +1863,18 @@ window.addEventListener("scroll", function() {
 
         clearTimeout(scrollSnapTimeout);
 
+
         scrollSnapTimeout = setTimeout(function() {
 
             /*
-             * Check again before snapping.
-             *
-             * The user may have started typing,
-             * zooming or panning while the timeout
-             * was waiting.
+             * Check again immediately before snapping.
              */
 
             if (
                 currentPlantAnswered ||
                 isTypingPlantName ||
                 isSnappingToTop ||
-                isPinching
+                isTwoFingerGesture
             ) {
 
                 return;
@@ -1868,6 +1883,7 @@ window.addEventListener("scroll", function() {
 
 
             isSnappingToTop = true;
+
 
             window.scrollTo({
                 top: 0,
@@ -1879,11 +1895,11 @@ window.addEventListener("scroll", function() {
             setTimeout(function() {
 
                 /*
-                 * Never force the page back to the top
-                 * if the user has started a pinch gesture.
+                 * Do not force the page back to the top if
+                 * the user has started a two-finger gesture.
                  */
 
-                if (!isPinching) {
+                if (!isTwoFingerGesture) {
 
                     window.scrollTo(0, 0);
 
@@ -1893,9 +1909,11 @@ window.addEventListener("scroll", function() {
 
                 }
 
+
                 isSnappingToTop = false;
 
             }, 400);
+
 
         }, 100);
 
