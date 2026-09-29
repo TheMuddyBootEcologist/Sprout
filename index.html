@@ -1703,109 +1703,33 @@ MOBILE SCROLL CONTROL
 ===================================================== */
 
 let scrollSnapTimeout;
+
 let isSnappingToTop = false;
+
 let isTypingPlantName = false;
 
-let isTwoFingerGesture = false;
-let twoFingerTimeout;
-
 
 /*
- * Detect the beginning of a two-finger gesture.
- *
- * Safari handles the actual pinch zoom and page movement.
- * We only prevent the quiz's scroll-lock from interfering.
+ * Check whether Safari is currently zoomed.
+ * When zoomed, the normal page scroll-lock is disabled
+ * so the user can freely pan in any direction.
  */
 
-document.addEventListener("touchstart", function(event) {
+function isPageZoomed() {
 
-    if (
-        window.innerWidth <= 600 &&
-        event.touches.length >= 2
-    ) {
+    if (window.innerWidth > 600) {
+        return false;
+    }
 
-        isTwoFingerGesture = true;
+    if (window.visualViewport) {
 
-        clearTimeout(scrollSnapTimeout);
-        clearTimeout(twoFingerTimeout);
+        return window.visualViewport.scale > 1.01;
 
     }
 
-}, { passive: true });
+    return false;
 
-
-/*
- * Keep the scroll-lock disabled while two fingers
- * are being used.
- */
-
-document.addEventListener("touchmove", function(event) {
-
-    if (
-        window.innerWidth <= 600 &&
-        event.touches.length >= 2
-    ) {
-
-        isTwoFingerGesture = true;
-
-        clearTimeout(scrollSnapTimeout);
-        clearTimeout(twoFingerTimeout);
-
-    }
-
-}, { passive: true });
-
-
-/*
- * When the gesture ends, keep the scroll-lock disabled
- * for a while.
- *
- * This is deliberately longer than the previous version.
- * Safari may continue moving the zoomed viewport after
- * the fingers have left the screen.
- */
-
-document.addEventListener("touchend", function(event) {
-
-    if (
-        window.innerWidth <= 600 &&
-        isTwoFingerGesture &&
-        event.touches.length === 0
-    ) {
-
-        clearTimeout(twoFingerTimeout);
-
-        twoFingerTimeout = setTimeout(function() {
-
-            isTwoFingerGesture = false;
-
-        }, 2000);
-
-    }
-
-}, { passive: true });
-
-
-/*
- * If the touch interaction is cancelled, also keep the
- * scroll-lock disabled briefly.
- */
-
-document.addEventListener("touchcancel", function() {
-
-    if (window.innerWidth <= 600) {
-
-        clearTimeout(twoFingerTimeout);
-
-        twoFingerTimeout = setTimeout(function() {
-
-            isTwoFingerGesture = false;
-
-        }, 2000);
-
-    }
-
-}, { passive: true });
+}
 
 
 /*
@@ -1831,20 +1755,15 @@ plantNameInput.addEventListener("blur", function() {
 });
 
 
-/*
- * Mobile scroll-lock.
- *
- * IMPORTANT:
- * When a two-finger gesture has occurred, this function
- * does absolutely nothing.
- *
- * Safari is therefore allowed to zoom and move the
- * ENTIRE webpage freely in every direction.
- */
-
 window.addEventListener("scroll", function() {
 
-    if (isTwoFingerGesture) {
+    /*
+     * If the page is zoomed, completely ignore the
+     * scroll event. Safari is allowed to pan freely
+     * in every direction, including diagonally.
+     */
+
+    if (isPageZoomed()) {
 
         clearTimeout(scrollSnapTimeout);
 
@@ -1863,27 +1782,23 @@ window.addEventListener("scroll", function() {
 
         clearTimeout(scrollSnapTimeout);
 
-
         scrollSnapTimeout = setTimeout(function() {
 
             /*
-             * Check again immediately before snapping.
+             * Check again before snapping.
              */
 
             if (
                 currentPlantAnswered ||
                 isTypingPlantName ||
                 isSnappingToTop ||
-                isTwoFingerGesture
+                isPageZoomed()
             ) {
-
                 return;
-
             }
 
 
             isSnappingToTop = true;
-
 
             window.scrollTo({
                 top: 0,
@@ -1895,11 +1810,11 @@ window.addEventListener("scroll", function() {
             setTimeout(function() {
 
                 /*
-                 * Do not force the page back to the top if
-                 * the user has started a two-finger gesture.
+                 * Never force the page back to the top
+                 * if Safari has entered zoom mode.
                  */
 
-                if (!isTwoFingerGesture) {
+                if (!isPageZoomed()) {
 
                     window.scrollTo(0, 0);
 
@@ -1909,11 +1824,9 @@ window.addEventListener("scroll", function() {
 
                 }
 
-
                 isSnappingToTop = false;
 
             }, 400);
-
 
         }, 100);
 
