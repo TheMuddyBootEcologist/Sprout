@@ -168,6 +168,10 @@ PLANT IMAGE CONTAINER
 
     position: relative;
 
+    overflow: hidden;
+
+    touch-action: none;
+
 }
 
 
@@ -188,6 +192,16 @@ PLANT IMAGE
     border-radius: 10px;
 
     display: block;
+
+    transform-origin: center center;
+
+    touch-action: none;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+
+    -webkit-user-drag: none;
 
 }
 
@@ -223,6 +237,8 @@ PHOTO ATTRIBUTION
     display: none;
 
     z-index: 5;
+
+    pointer-events: none;
 
 }
 
@@ -1098,6 +1114,7 @@ MAIN TRAINER
                     id="plant-image"
                     src=""
                     alt="Plant"
+                    draggable="false"
                 >
 
                 <div id="photo-attribution"></div>
@@ -1155,7 +1172,7 @@ MAIN TRAINER
 
             <!-- =================================================
                  NATIVE / INTRODUCED
-            ================================================== -->
+            ================================================= -->
 
             <div class="status-buttons">
 
@@ -1503,6 +1520,474 @@ let selectedStatus = "";
 
 
 /* =====================================================
+IMAGE ZOOM / PAN
+===================================================== */
+
+const imageContainer =
+    document.querySelector(".image-container");
+
+const plantImage =
+    document.getElementById("plant-image");
+
+
+let imageScale = 1;
+
+let imageX = 0;
+
+let imageY = 0;
+
+let activePointers = new Map();
+
+let lastPanX = 0;
+
+let lastPanY = 0;
+
+let pinchStartDistance = 0;
+
+let pinchStartScale = 1;
+
+let pinchStartCenterX = 0;
+
+let pinchStartCenterY = 0;
+
+let pinchStartImageX = 0;
+
+let pinchStartImageY = 0;
+
+
+/*
+ * Maximum zoom level.
+ */
+
+const MAX_IMAGE_SCALE = 5;
+
+
+/*
+ * Calculate the distance between two fingers.
+ */
+
+function getPointerDistance() {
+
+    const pointers =
+        Array.from(
+            activePointers.values()
+        );
+
+    if (pointers.length < 2) {
+        return 0;
+    }
+
+    const dx =
+        pointers[0].x -
+        pointers[1].x;
+
+    const dy =
+        pointers[0].y -
+        pointers[1].y;
+
+    return Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
+
+}
+
+
+/*
+ * Calculate the centre point between two fingers.
+ */
+
+function getPointerCenter() {
+
+    const pointers =
+        Array.from(
+            activePointers.values()
+        );
+
+    if (pointers.length < 2) {
+        return {
+            x: 0,
+            y: 0
+        };
+    }
+
+    return {
+
+        x:
+            (pointers[0].x +
+             pointers[1].x) / 2,
+
+        y:
+            (pointers[0].y +
+             pointers[1].y) / 2
+
+    };
+
+}
+
+
+/*
+ * Apply the current zoom and pan position.
+ */
+
+function updateImageTransform() {
+
+    plantImage.style.transform =
+        "translate3d(" +
+        imageX +
+        "px, " +
+        imageY +
+        "px, 0) " +
+        "scale(" +
+        imageScale +
+        ")";
+
+}
+
+
+/*
+ * Reset the image to its normal position.
+ */
+
+function resetImageZoom() {
+
+    imageScale = 1;
+
+    imageX = 0;
+
+    imageY = 0;
+
+    activePointers.clear();
+
+    pinchStartDistance = 0;
+
+    updateImageTransform();
+
+}
+
+
+/*
+ * Start a touch/pointer interaction.
+ */
+
+plantImage.addEventListener(
+    "pointerdown",
+    function(event) {
+
+        event.preventDefault();
+
+        plantImage.setPointerCapture(
+            event.pointerId
+        );
+
+
+        activePointers.set(
+            event.pointerId,
+            {
+                x: event.clientX,
+                y: event.clientY
+            }
+        );
+
+
+        /*
+         * Two fingers have started a pinch.
+         */
+
+        if (activePointers.size === 2) {
+
+            const center =
+                getPointerCenter();
+
+            pinchStartDistance =
+                getPointerDistance();
+
+            pinchStartScale =
+                imageScale;
+
+            pinchStartCenterX =
+                center.x;
+
+            pinchStartCenterY =
+                center.y;
+
+            pinchStartImageX =
+                imageX;
+
+            pinchStartImageY =
+                imageY;
+
+            return;
+
+        }
+
+
+        /*
+         * One finger starts a free pan.
+         */
+
+        if (
+            activePointers.size === 1 &&
+            imageScale > 1
+        ) {
+
+            lastPanX =
+                event.clientX;
+
+            lastPanY =
+                event.clientY;
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/*
+ * Handle continuous movement.
+ *
+ * This deliberately uses both X and Y simultaneously,
+ * so movement is completely omnidirectional.
+ */
+
+plantImage.addEventListener(
+    "pointermove",
+    function(event) {
+
+        event.preventDefault();
+
+
+        if (
+            !activePointers.has(
+                event.pointerId
+            )
+        ) {
+            return;
+        }
+
+
+        activePointers.set(
+            event.pointerId,
+            {
+                x: event.clientX,
+                y: event.clientY
+            }
+        );
+
+
+        /*
+         * PINCH ZOOM
+         */
+
+        if (activePointers.size >= 2) {
+
+            const newDistance =
+                getPointerDistance();
+
+            if (pinchStartDistance === 0) {
+                return;
+            }
+
+
+            const zoomRatio =
+                newDistance /
+                pinchStartDistance;
+
+
+            imageScale =
+                Math.min(
+                    MAX_IMAGE_SCALE,
+                    Math.max(
+                        1,
+                        pinchStartScale *
+                        zoomRatio
+                    )
+                );
+
+
+            /*
+             * Move the image with the pinch centre.
+             * Both X and Y are preserved.
+             */
+
+            const center =
+                getPointerCenter();
+
+
+            imageX =
+                pinchStartImageX +
+                (
+                    center.x -
+                    pinchStartCenterX
+                );
+
+
+            imageY =
+                pinchStartImageY +
+                (
+                    center.y -
+                    pinchStartCenterY
+                );
+
+
+            updateImageTransform();
+
+            return;
+
+        }
+
+
+        /*
+         * ONE-FINGER FREE PAN
+         */
+
+        if (
+            activePointers.size === 1 &&
+            imageScale > 1
+        ) {
+
+            const dx =
+                event.clientX -
+                lastPanX;
+
+            const dy =
+                event.clientY -
+                lastPanY;
+
+
+            /*
+             * X and Y are updated independently.
+             * There is deliberately no axis locking.
+             */
+
+            imageX += dx;
+
+            imageY += dy;
+
+
+            lastPanX =
+                event.clientX;
+
+            lastPanY =
+                event.clientY;
+
+
+            updateImageTransform();
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/*
+ * When one finger is lifted after a pinch, the remaining
+ * finger immediately becomes a normal free-pan finger.
+ */
+
+plantImage.addEventListener(
+    "pointerup",
+    function(event) {
+
+        event.preventDefault();
+
+        activePointers.delete(
+            event.pointerId
+        );
+
+
+        if (activePointers.size === 1) {
+
+            const remaining =
+                Array.from(
+                    activePointers.values()
+                )[0];
+
+
+            lastPanX =
+                remaining.x;
+
+            lastPanY =
+                remaining.y;
+
+        }
+
+
+        if (activePointers.size === 0) {
+
+            pinchStartDistance = 0;
+
+        }
+
+
+        /*
+         * Return to normal size if the user zooms
+         * completely back out.
+         */
+
+        if (imageScale <= 1) {
+
+            imageScale = 1;
+
+            imageX = 0;
+
+            imageY = 0;
+
+            updateImageTransform();
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/*
+ * Handle cancelled touches.
+ */
+
+plantImage.addEventListener(
+    "pointercancel",
+    function(event) {
+
+        activePointers.delete(
+            event.pointerId
+        );
+
+
+        if (activePointers.size === 0) {
+
+            pinchStartDistance = 0;
+
+        }
+
+    }
+);
+
+
+/*
+ * Prevent the browser's default image dragging.
+ */
+
+plantImage.addEventListener(
+    "dragstart",
+    function(event) {
+
+        event.preventDefault();
+
+    }
+);
+
+
+/* =====================================================
 SHUFFLE PLANTS
 ===================================================== */
 
@@ -1569,7 +2054,7 @@ function selectStatus(status) {
 
         document
             .getElementById("introduced-button")
-            .classList.add("selected");
+        .classList.add("selected");
 
     }
 
@@ -1581,6 +2066,13 @@ SHOW PHOTO
 ===================================================== */
 
 function showPhoto() {
+
+    /*
+     * Reset zoom and pan whenever a photo is displayed.
+     */
+
+    resetImageZoom();
+
 
     /*
      * Use the plant currently displayed rather than
@@ -1710,26 +2202,11 @@ let isTypingPlantName = false;
 
 
 /*
- * Check whether Safari is currently zoomed.
- * When zoomed, the normal page scroll-lock is disabled
- * so the user can freely pan in any direction.
+ * The image now handles its own zoom and panning.
+ *
+ * The page scroll-lock therefore only applies when
+ * the image is at normal zoom.
  */
-
-function isPageZoomed() {
-
-    if (window.innerWidth > 600) {
-        return false;
-    }
-
-    if (window.visualViewport) {
-
-        return window.visualViewport.scale > 1.01;
-
-    }
-
-    return false;
-
-}
 
 
 /*
@@ -1758,12 +2235,14 @@ plantNameInput.addEventListener("blur", function() {
 window.addEventListener("scroll", function() {
 
     /*
-     * If the page is zoomed, completely ignore the
-     * scroll event. Safari is allowed to pan freely
-     * in every direction, including diagonally.
+     * Do not apply the page scroll-lock while the user
+     * is interacting with the image.
      */
 
-    if (isPageZoomed()) {
+    if (
+        window.innerWidth <= 600 &&
+        imageScale > 1
+    ) {
 
         clearTimeout(scrollSnapTimeout);
 
@@ -1792,7 +2271,7 @@ window.addEventListener("scroll", function() {
                 currentPlantAnswered ||
                 isTypingPlantName ||
                 isSnappingToTop ||
-                isPageZoomed()
+                imageScale > 1
             ) {
                 return;
             }
@@ -1810,11 +2289,11 @@ window.addEventListener("scroll", function() {
             setTimeout(function() {
 
                 /*
-                 * Never force the page back to the top
-                 * if Safari has entered zoom mode.
+                 * Do not force the page back to the top
+                 * while the image is zoomed.
                  */
 
-                if (!isPageZoomed()) {
+                if (imageScale <= 1) {
 
                     window.scrollTo(0, 0);
 
@@ -2345,6 +2824,9 @@ function nextPlant() {
     isTypingPlantName = false;
 
 
+    resetImageZoom();
+
+
     isSnappingToTop = true;
 
     window.scrollTo({
@@ -2470,6 +2952,9 @@ function restartTest() {
     isTypingPlantName = false;
 
     displayedPlant = null;
+
+
+    resetImageZoom();
 
 
     isSnappingToTop = true;
