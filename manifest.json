@@ -1,6 +1,6 @@
 {
-    "name": "Flora Trainer",
-    "short_name": "Flora Trainer",
+    "name": "Sprout",
+    "short_name": "Sprout",
     "start_url": "./",
     "display": "standalone",
     "background_color": "#f2f2f2",
