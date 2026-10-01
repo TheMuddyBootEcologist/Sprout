@@ -6466,8 +6466,8 @@ GET PLANTS FOR CATEGORY
 async function getPlantsForCategory(category) {
 
     /*
-     * Check which plants actually have at least one
-     * photo file that exists and can be loaded.
+     * Check all plants for at least one photo that
+     * actually exists.
      */
 
     const plantsWithPhotos = [];
@@ -6485,50 +6485,48 @@ async function getPlantsForCategory(category) {
         }
 
 
-        let hasValidPhoto = false;
+        const photoChecks =
+            plant.photos.map(
+                function(photo) {
+
+                    return new Promise(
+                        function(resolve) {
+
+                            const image =
+                                new Image();
 
 
-        for (const photo of plant.photos) {
+                            image.onload =
+                                function() {
 
-            const imageExists =
-                await new Promise(
-                    function(resolve) {
+                                    resolve(true);
 
-                        const image =
-                            new Image();
+                                };
 
 
-                        image.onload =
-                            function() {
+                            image.onerror =
+                                function() {
 
-                                resolve(true);
+                                    resolve(false);
 
-                            };
-
-
-                        image.onerror =
-                            function() {
-
-                                resolve(false);
-
-                            };
+                                };
 
 
-                        image.src = photo;
+                            image.src = photo;
 
-                    }
-                );
+                        }
+                    );
+
+                }
+            );
 
 
-            if (imageExists) {
+        const results =
+            await Promise.all(photoChecks);
 
-                hasValidPhoto = true;
 
-                break;
-
-            }
-
-        }
+        const hasValidPhoto =
+            results.includes(true);
 
 
         if (hasValidPhoto) {
