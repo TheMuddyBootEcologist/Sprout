@@ -7079,6 +7079,36 @@ window.addEventListener(
     "scroll",
     function() {
 
+        /*
+         * If the user has zoomed in on the webpage,
+         * completely ignore the mobile scroll control.
+         *
+         * This allows the user to move around the
+         * zoomed-in page without being forced back
+         * to the top.
+         */
+        const isPageZoomed =
+            window.visualViewport &&
+            window.visualViewport.scale > 1;
+
+
+        if (isPageZoomed) {
+
+            clearTimeout(
+                scrollSnapTimeout
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * ORIGINAL MOBILE SCROLL CONTROL
+         *
+         * This remains unchanged when the page
+         * is at normal 100% zoom.
+         */
         if (
             window.innerWidth <= 600 &&
             !currentPlantAnswered &&
@@ -7096,10 +7126,22 @@ window.addEventListener(
                 setTimeout(
                     function() {
 
+                        /*
+                         * Check again immediately before
+                         * snapping. This is important because
+                         * the user may have started zooming
+                         * during the 100 ms delay.
+                         */
+                        const isPageZoomed =
+                            window.visualViewport &&
+                            window.visualViewport.scale > 1;
+
+
                         if (
                             currentPlantAnswered ||
                             isTypingPlantName ||
-                            isSnappingToTop
+                            isSnappingToTop ||
+                            isPageZoomed
                         ) {
 
                             return;
@@ -7111,23 +7153,42 @@ window.addEventListener(
 
 
                         window.scrollTo({
+
                             top: 0,
+
                             left: 0,
+
                             behavior: "smooth"
+
                         });
 
 
                         setTimeout(
                             function() {
 
-                                window.scrollTo(
-                                    0,
-                                    0
-                                );
+                                /*
+                                 * Do not force the page back
+                                 * to the top if the user started
+                                 * zooming during the animation.
+                                 */
+                                const isPageZoomed =
+                                    window.visualViewport &&
+                                    window.visualViewport.scale > 1;
 
-                                document.documentElement.scrollTop = 0;
 
-                                document.body.scrollTop = 0;
+                                if (!isPageZoomed) {
+
+                                    window.scrollTo(
+                                        0,
+                                        0
+                                    );
+
+                                    document.documentElement.scrollTop = 0;
+
+                                    document.body.scrollTop = 0;
+
+                                }
+
 
                                 isSnappingToTop = false;
 
@@ -7143,7 +7204,6 @@ window.addEventListener(
 
     }
 );
-
 
 /* =====================================================
 SUBMIT ANSWER
