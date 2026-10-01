@@ -7373,6 +7373,25 @@ function submitAnswer() {
     information.style.display =
         "block";
 
+        /*
+     * On mobile, scroll down to show the result
+     * and plant information.
+     */
+
+    if (window.innerWidth <= 600) {
+
+        setTimeout(function() {
+
+            document.getElementById(
+                "result"
+            ).scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }, 100);
+
+    }
 
     /* =================================================
        REMOVE ANSWERED PLANT
