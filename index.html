@@ -6372,12 +6372,12 @@ function getCategoryDisplayName(category) {
 SELECT CATEGORY
 ===================================================== */
 
-async function selectCategory(category) {
+function selectCategory(category) {
 
     selectedCategory = category;
 
     const availablePlants =
-        await getPlantsForCategory(category);
+        getPlantsForCategory(category);
 
 
     document.getElementById(
@@ -6434,6 +6434,7 @@ async function selectCategory(category) {
             availablePlants.length < 40
         );
 
+
     /*
      * All Available is always available as long as
      * there is at least one plant.
@@ -6463,81 +6464,29 @@ async function selectCategory(category) {
 GET PLANTS FOR CATEGORY
 ===================================================== */
 
-async function getPlantsForCategory(category) {
+function getPlantsForCategory(category) {
 
     /*
-     * Check all plants for at least one photo that
-     * actually exists.
+     * A plant is available for the quiz if it has
+     * at least one photo attribution.
      */
 
-    const plantsWithPhotos = [];
+    const plantsWithPhotos =
+        plants.filter(function(plant) {
 
+            return (
+                Array.isArray(plant.attributions) &&
+                plant.attributions.some(function(attribution) {
 
-    for (const plant of plants) {
-
-        if (
-            !Array.isArray(plant.photos) ||
-            plant.photos.length === 0
-        ) {
-
-            continue;
-
-        }
-
-
-        const photoChecks =
-            plant.photos.map(
-                function(photo) {
-
-                    return new Promise(
-                        function(resolve) {
-
-                            const image =
-                                new Image();
-
-
-                            image.onload =
-                                function() {
-
-                                    resolve(true);
-
-                                };
-
-
-                            image.onerror =
-                                function() {
-
-                                    resolve(false);
-
-                                };
-
-
-                            image.src = photo;
-
-                        }
+                    return (
+                        typeof attribution === "string" &&
+                        attribution.trim() !== ""
                     );
 
-                }
+                })
             );
 
-
-        const results =
-            await Promise.all(photoChecks);
-
-
-        const hasValidPhoto =
-            results.includes(true);
-
-
-        if (hasValidPhoto) {
-
-            plantsWithPhotos.push(
-                plant
-            );
-
-        }
-
-    }
+        });
 
 
     /*
@@ -6564,15 +6513,14 @@ async function getPlantsForCategory(category) {
     );
 
 }
-
 /* =====================================================
 START SELECTED QUIZ
 ===================================================== */
 
-async function startSelectedQuiz(questionCount) {
+function startSelectedQuiz(questionCount) {
 
     const availablePlants =
-        await getPlantsForCategory(
+        getPlantsForCategory(
             selectedCategory
         );
 
