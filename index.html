@@ -6715,11 +6715,16 @@ function startSelectedQuiz(questionCount) {
     showPhoto();
 
 
-    window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "instant"
-    });
+    const firstPhoto = plantQueue[0].photos[0];
+
+const preloadImage = new Image();
+preloadImage.src = firstPhoto;
+
+window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "instant"
+});
 
 }
 
@@ -6914,6 +6919,25 @@ function showPhoto() {
         "plant-image"
     ).src =
         displayedPlant.photos[currentPhoto];
+
+
+    /* Preload next photo */
+
+    const nextPhotoIndex =
+        currentPhoto + 1;
+
+    if (
+        nextPhotoIndex <
+        displayedPlant.photos.length
+    ) {
+
+        const preloadNext =
+            new Image();
+
+        preloadNext.src =
+            displayedPlant.photos[nextPhotoIndex];
+
+    }
 
 
     document.getElementById(
